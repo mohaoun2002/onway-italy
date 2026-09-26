@@ -131,7 +131,29 @@ export default function ApplicationModal({ isOpen, onClose, preselectedUni, onAp
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || 'Submission failed');
 
-      // Dispatch EmailJS notification directly to italyoneway@gmail.com
+      // Dispatch EmailJS notification directly to italyoneway@gmail.com with applicant email embedded
+      const dossierSummaryMessage = [
+        `NEW APPLICATION DOSSIER: ${json.application?.id || 'Pending'}`,
+        `==================================================`,
+        `APPLICANT EMAIL: ${formData.email}`,
+        `REPLY-TO: ${formData.email}`,
+        `FULL NAME: ${formData.fullName}`,
+        `PHONE / WHATSAPP: ${formData.phone}`,
+        `WILAYA: ${formData.wilaya}`,
+        `--------------------------------------------------`,
+        `ACADEMIC TARGET & BACKGROUND:`,
+        `- Study Level: ${formData.studyLevel}`,
+        `- Field of Study: ${formData.field}`,
+        `- Current Degree: ${formData.currentDegree} (Baccalaureate: ${formData.bacYear})`,
+        `- GPA / Mention: ${formData.gpa || 'N/A'}`,
+        `- Target Italian Universities: ${Array.isArray(formData.universities) ? formData.universities.join(', ') : formData.universities}`,
+        `--------------------------------------------------`,
+        `APPLICANT NOTES / INQUIRY:`,
+        formData.notes || 'None provided',
+        `==================================================`,
+        `DIRECT REPLY EMAIL: ${formData.email}`
+      ].join('\n');
+
       sendEmailJSNotification({
         fullName: formData.fullName,
         email: formData.email,
@@ -141,6 +163,7 @@ export default function ApplicationModal({ isOpen, onClose, preselectedUni, onAp
         field: formData.field,
         universities: formData.universities,
         notes: formData.notes,
+        message: dossierSummaryMessage,
         trackingId: json.application?.id
       }).catch(err => {
         console.warn('[EmailJS Notification Warning]', err);

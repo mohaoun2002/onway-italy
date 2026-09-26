@@ -41,14 +41,28 @@ export default function ContactModal({ isOpen, onClose }) {
     setIsSubmitting(true);
 
     try {
+      const detailedMessage = [
+        `Applicant Email: ${formData.email}`,
+        `Reply-To: ${formData.email}`,
+        `Full Name: ${formData.fullName}`,
+        `Phone (WhatsApp): ${formData.phone || 'Not provided'}`,
+        `Wilaya: ${formData.wilaya}`,
+        `Topic: ${formData.topic}`,
+        `----------------------------------------`,
+        `Message Content:`,
+        formData.message,
+        `----------------------------------------`,
+        `Reply directly to: ${formData.email}`
+      ].join('\n');
+
       const res = await sendEmailJSNotification({
         fullName: formData.fullName,
         email: formData.email,
         phone: formData.phone,
         wilaya: formData.wilaya,
         studyLevel: formData.topic,
-        message: formData.message,
-        notes: `Topic: ${formData.topic}\n\nMessage:\n${formData.message}`
+        message: detailedMessage,
+        notes: detailedMessage
       });
 
       if (!res.success) {
