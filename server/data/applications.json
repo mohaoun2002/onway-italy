@@ -1,5 +1,202 @@
 [
   {
+    "id": "OWI-2026-6434",
+    "createdAt": "2026-09-26T15:54:21.390Z",
+    "fullName": "mohamed",
+    "email": "mohamed@gmail.com",
+    "phone": "+213 655635481",
+    "wilaya": "16 - Alger",
+    "studyLevel": "Master",
+    "field": "Computer Science & Artificial Intelligence",
+    "language": "English",
+    "gpa": "13/20",
+    "bacYear": "2023",
+    "currentDegree": "master 2",
+    "universities": [
+      "Marche Polytechnic University (First Call)"
+    ],
+    "status": "Pending Review",
+    "statusNote": "New dossier submitted. OnWay Italy counselor assigned for initial academic validation.",
+    "consulate": "Italian Embassy in Algiers (VFS Global)",
+    "dsuEligibility": "Calculated upon translation of family income records",
+    "documents": [
+      {
+        "name": "Baccalaureate2020_ounnas_mohamed.pdf",
+        "serverFilename": "1790438061335-59085266-Baccalaureate2020_ounnas_mohamed.pdf",
+        "url": "/uploads/1790438061335-59085266-Baccalaureate2020_ounnas_mohamed.pdf",
+        "size": "1.04 MB",
+        "uploadedAt": "2026-09-26T15:54:21.387Z"
+      }
+    ]
+  },
+  {
+    "id": "OWI-2026-9358",
+    "createdAt": "2026-09-26T15:26:27.194Z",
+    "fullName": "Kimo Hadid",
+    "email": "kimohadid42@gmail.com",
+    "phone": "+213 644789874",
+    "wilaya": "16 - Alger",
+    "studyLevel": "Master",
+    "field": "Computer Science & Artificial Intelligence",
+    "language": "English",
+    "gpa": "13.67/20",
+    "bacYear": "2023",
+    "currentDegree": "master 1 ",
+    "universities": [
+      "University of Padua (Limited Programs)",
+      "University of Verona",
+      "University of Tuscia"
+    ],
+    "status": "Pending Review",
+    "statusNote": "New dossier submitted. OnWay Italy counselor assigned for initial academic validation.",
+    "consulate": "Italian Embassy in Algiers (VFS Global)",
+    "dsuEligibility": "Calculated upon translation of family income records",
+    "documents": [
+      {
+        "name": "Baccalaureate2020_ounnas_mohamed.pdf",
+        "serverFilename": "1790436387161-202866244-Baccalaureate2020_ounnas_mohamed.pdf",
+        "url": "/uploads/1790436387161-202866244-Baccalaureate2020_ounnas_mohamed.pdf",
+        "size": "1.04 MB",
+        "uploadedAt": "2026-09-26T15:26:27.193Z"
+      },
+      {
+        "name": "CV_Mohamed_Ounnas.pdf.pdf",
+        "serverFilename": "1790436387188-761930408-CV_Mohamed_Ounnas.pdf.pdf",
+        "url": "/uploads/1790436387188-761930408-CV_Mohamed_Ounnas.pdf.pdf",
+        "size": "0.36 MB",
+        "uploadedAt": "2026-09-26T15:26:27.193Z"
+      }
+    ]
+  },
+  {
+    "id": "OWI-2026-5089",
+    "createdAt": "2026-09-26T12:07:42.611Z",
+    "fullName": "Mohamed Ounnas",
+    "email": "mahou8765@gmail.com",
+    "phone": "+213 55645381",
+    "wilaya": "16 - Alger",
+    "studyLevel": "Master",
+    "field": "Computer Science & Artificial Intelligence",
+    "language": "English",
+    "gpa": "13/20",
+    "bacYear": "2023",
+    "currentDegree": "license 2",
+    "universities": [
+      "Ca' Foscari University of Venice",
+      "Marche Polytechnic University (Second Call)",
+      "Politecnico di Milano"
+    ],
+    "status": "Pending Review",
+    "statusNote": "New dossier submitted. OnWay Italy counselor assigned for initial academic validation.",
+    "consulate": "Italian Embassy in Algiers (VFS Global)",
+    "dsuEligibility": "Calculated upon translation of family income records",
+    "documents": [
+      {
+        "name": "Baccalaureate2020_ounnas_mohamed.pdf",
+        "serverFilename": "1790424462575-136260470-Baccalaureate2020_ounnas_mohamed.pdf",
+        "url": "/uploads/1790424462575-136260470-Baccalaureate2020_ounnas_mohamed.pdf",
+        "size": "1.04 MB",
+        "uploadedAt": "2026-09-26T12:07:42.611Z"
+      }
+    ]
+  },
+  {
+    "id": "OWI-2026-3109",
+    "createdAt": "2026-09-26T12:02:07.706Z",
+    "fullName": "Samir abdik",
+    "email": "samir@gmail.com",
+    "phone": "+213 788656543",
+    "wilaya": "16 - Alger",
+    "studyLevel": "Master",
+    "field": "Computer Science & Artificial Intelligence",
+    "language": "English",
+    "gpa": "18/20",
+    "bacYear": "2023",
+    "currentDegree": "master1",
+    "universities": [
+      "Ca' Foscari University of Venice",
+      "Marche Polytechnic University (Second Call)",
+      "Politecnico di Milano"
+    ],
+    "status": "Pending Review",
+    "statusNote": "New dossier submitted. OnWay Italy counselor assigned for initial academic validation.",
+    "consulate": "Italian Embassy in Algiers (VFS Global)",
+    "dsuEligibility": "Calculated upon translation of family income records",
+    "documents": [
+      {
+        "name": "Baccalaureate2020_ounnas_mohamed.pdf",
+        "serverFilename": "1790424127655-703903484-Baccalaureate2020_ounnas_mohamed.pdf",
+        "url": "/uploads/1790424127655-703903484-Baccalaureate2020_ounnas_mohamed.pdf",
+        "size": "1.04 MB",
+        "uploadedAt": "2026-09-26T12:02:07.705Z"
+      }
+    ]
+  },
+  {
+    "id": "OWI-2026-9986",
+    "createdAt": "2026-09-26T11:58:54.212Z",
+    "fullName": "Asmaa Oun",
+    "email": "Asmaoun@gmail.com",
+    "phone": "+213 55637465",
+    "wilaya": "16 - Alger",
+    "studyLevel": "Master",
+    "field": "Computer Science & Artificial Intelligence",
+    "language": "English",
+    "gpa": "13/20",
+    "bacYear": "2023",
+    "currentDegree": "master 2",
+    "universities": [
+      "Ca' Foscari University of Venice",
+      "Marche Polytechnic University (Second Call)",
+      "Politecnico di Milano"
+    ],
+    "status": "Pending Review",
+    "statusNote": "New dossier submitted. OnWay Italy counselor assigned for initial academic validation.",
+    "consulate": "Italian Embassy in Algiers (VFS Global)",
+    "dsuEligibility": "Calculated upon translation of family income records",
+    "documents": [
+      {
+        "name": "Baccalaureate2020_ounnas_mohamed.pdf",
+        "serverFilename": "1790423934172-183718183-Baccalaureate2020_ounnas_mohamed.pdf",
+        "url": "/uploads/1790423934172-183718183-Baccalaureate2020_ounnas_mohamed.pdf",
+        "size": "1.04 MB",
+        "uploadedAt": "2026-09-26T11:58:54.212Z"
+      }
+    ]
+  },
+  {
+    "id": "OWI-2026-5989",
+    "createdAt": "2026-09-26T11:52:02.368Z",
+    "fullName": "Ahmed Ounnas",
+    "email": "mohamedouledyaich123@gmail.com",
+    "phone": "+213 655635491",
+    "wilaya": "16 - Alger",
+    "studyLevel": "Master",
+    "field": "Computer Science & Artificial Intelligence",
+    "language": "English",
+    "gpa": "15/20",
+    "bacYear": "2023",
+    "currentDegree": "master 1",
+    "universities": [
+      "Polytechnic University of Turin (First Call)",
+      "Politecnico di Milano",
+      "Marche Polytechnic University (First Call)"
+    ],
+    "status": "Pending Review",
+    "statusNote": "New dossier submitted. OnWay Italy counselor assigned for initial academic validation.",
+    "consulate": "Italian Embassy in Algiers (VFS Global)",
+    "dsuEligibility": "Calculated upon translation of family income records",
+    "documents": [
+      {
+        "name": "Baccalaureate2020_ounnas_mohamed.pdf",
+        "serverFilename": "1790423522318-439311225-Baccalaureate2020_ounnas_mohamed.pdf",
+        "url": "/uploads/1790423522318-439311225-Baccalaureate2020_ounnas_mohamed.pdf",
+        "size": "1.04 MB",
+        "uploadedAt": "2026-09-26T11:52:02.368Z"
+      }
+    ]
+  },
+  {
     "id": "OWI-2026-3161",
     "createdAt": "2026-09-25T22:43:03.786Z",
     "fullName": "Mohamed Ounnas",
@@ -17,7 +214,7 @@
       "Politecnico di Milano",
       "Polytechnic University of Turin (Second Call)"
     ],
-    "status": "Pending Review",
+    "status": "Under Review",
     "statusNote": "New dossier submitted. OnWay Italy counselor assigned for initial academic validation.",
     "consulate": "Italian Embassy in Algiers (VFS Global)",
     "dsuEligibility": "Calculated upon translation of family income records",
@@ -29,7 +226,8 @@
         "size": "1.04 MB",
         "uploadedAt": "2026-09-25T22:43:03.786Z"
       }
-    ]
+    ],
+    "updatedAt": "2026-09-26T12:26:33.097Z"
   },
   {
     "id": "OWI-2026-9257",
@@ -62,174 +260,6 @@
         "uploadedAt": "2026-09-25T22:22:47.989Z"
       }
     ]
-  },
-  {
-    "id": "OWI-2026-9972",
-    "createdAt": "2026-09-25T22:17:20.586Z",
-    "fullName": "Karim Zerrouki",
-    "email": "karim.zerrouki@gmail.com",
-    "phone": "+213 670 11 22 33",
-    "wilaya": "16 - Alger",
-    "studyLevel": "Master",
-    "field": "Artificial Intelligence",
-    "language": "English",
-    "gpa": "16.20 / 20",
-    "bacYear": "2023",
-    "currentDegree": "Licence Math-Info",
-    "universities": [
-      "University of Bologna",
-      "Politecnico di Milano"
-    ],
-    "status": "Universitaly Validated",
-    "statusNote": "All credentials validated. Bologna pre-admission letter issued.",
-    "consulate": "Italian Embassy in Algiers (VFS Global)",
-    "dsuEligibility": "Calculated upon translation of family income records",
-    "documents": [],
-    "updatedAt": "2026-09-25T22:17:20.774Z"
-  },
-  {
-    "id": "OWI-2026-6292",
-    "createdAt": "2026-09-25T14:57:43.231Z",
-    "fullName": "Karim Zerrouki",
-    "email": "karim.zerrouki@gmail.com",
-    "phone": "+213 670 11 22 33",
-    "wilaya": "16 - Alger",
-    "studyLevel": "Master",
-    "field": "Artificial Intelligence",
-    "language": "English",
-    "gpa": "16.20 / 20",
-    "bacYear": "2023",
-    "currentDegree": "Licence Math-Info",
-    "universities": [
-      "University of Bologna",
-      "Politecnico di Milano"
-    ],
-    "status": "Universitaly Validated",
-    "statusNote": "All credentials validated. Bologna pre-admission letter issued.",
-    "consulate": "Italian Embassy in Algiers (VFS Global)",
-    "dsuEligibility": "Calculated upon translation of family income records",
-    "documents": [],
-    "updatedAt": "2026-09-25T14:57:43.272Z"
-  },
-  {
-    "id": "OWI-2026-1553",
-    "createdAt": "2026-09-24T23:40:10.120Z",
-    "fullName": "Karim Zerrouki",
-    "email": "karim.zerrouki@gmail.com",
-    "phone": "+213 670 11 22 33",
-    "wilaya": "16 - Alger",
-    "studyLevel": "Master",
-    "field": "Artificial Intelligence",
-    "language": "English",
-    "gpa": "16.20 / 20",
-    "bacYear": "2023",
-    "currentDegree": "Licence Math-Info",
-    "universities": [
-      "University of Bologna",
-      "Politecnico di Milano"
-    ],
-    "status": "Universitaly Validated",
-    "statusNote": "All credentials validated. Bologna pre-admission letter issued.",
-    "consulate": "Italian Embassy in Algiers (VFS Global)",
-    "dsuEligibility": "Calculated upon translation of family income records",
-    "documents": [],
-    "updatedAt": "2026-09-24T23:40:10.160Z"
-  },
-  {
-    "id": "OWI-2026-4614",
-    "createdAt": "2026-09-24T23:14:15.649Z",
-    "fullName": "Karim Zerrouki",
-    "email": "karim.zerrouki@gmail.com",
-    "phone": "+213 670 11 22 33",
-    "wilaya": "16 - Alger",
-    "studyLevel": "Master",
-    "field": "Artificial Intelligence",
-    "language": "English",
-    "gpa": "16.20 / 20",
-    "bacYear": "2023",
-    "currentDegree": "Licence Math-Info",
-    "universities": [
-      "University of Bologna",
-      "Politecnico di Milano"
-    ],
-    "status": "Universitaly Validated",
-    "statusNote": "All credentials validated. Bologna pre-admission letter issued.",
-    "consulate": "Italian Embassy in Algiers (VFS Global)",
-    "dsuEligibility": "Calculated upon translation of family income records",
-    "documents": [],
-    "updatedAt": "2026-09-24T23:14:15.676Z"
-  },
-  {
-    "id": "OWI-2026-6343",
-    "createdAt": "2026-09-24T23:01:00.181Z",
-    "fullName": "Karim Zerrouki",
-    "email": "karim.zerrouki@gmail.com",
-    "phone": "+213 670 11 22 33",
-    "wilaya": "16 - Alger",
-    "studyLevel": "Master",
-    "field": "Artificial Intelligence",
-    "language": "English",
-    "gpa": "16.20 / 20",
-    "bacYear": "2023",
-    "currentDegree": "Licence Math-Info",
-    "universities": [
-      "University of Bologna",
-      "Politecnico di Milano"
-    ],
-    "status": "Universitaly Validated",
-    "statusNote": "All credentials validated. Bologna pre-admission letter issued.",
-    "consulate": "Italian Embassy in Algiers (VFS Global)",
-    "dsuEligibility": "Calculated upon translation of family income records",
-    "documents": [],
-    "updatedAt": "2026-09-24T23:01:00.222Z"
-  },
-  {
-    "id": "OWI-2026-9450",
-    "createdAt": "2026-09-21T23:00:18.130Z",
-    "fullName": "Karim Zerrouki",
-    "email": "karim.zerrouki@gmail.com",
-    "phone": "+213 670 11 22 33",
-    "wilaya": "16 - Alger",
-    "studyLevel": "Master",
-    "field": "Artificial Intelligence",
-    "language": "English",
-    "gpa": "16.20 / 20",
-    "bacYear": "2023",
-    "currentDegree": "Licence Math-Info",
-    "universities": [
-      "University of Bologna",
-      "Politecnico di Milano"
-    ],
-    "status": "Universitaly Validated",
-    "statusNote": "All credentials validated. Bologna pre-admission letter issued.",
-    "consulate": "Italian Embassy in Algiers (VFS Global)",
-    "dsuEligibility": "Calculated upon translation of family income records",
-    "documents": [],
-    "updatedAt": "2026-09-21T23:00:18.168Z"
-  },
-  {
-    "id": "OWI-2026-5043",
-    "createdAt": "2026-09-21T22:57:26.724Z",
-    "fullName": "Karim Zerrouki",
-    "email": "karim.zerrouki@gmail.com",
-    "phone": "+213 670 11 22 33",
-    "wilaya": "16 - Alger",
-    "studyLevel": "Master",
-    "field": "Artificial Intelligence",
-    "language": "English",
-    "gpa": "16.20 / 20",
-    "bacYear": "2023",
-    "currentDegree": "Licence Math-Info",
-    "universities": [
-      "University of Bologna",
-      "Politecnico di Milano"
-    ],
-    "status": "Universitaly Validated",
-    "statusNote": "All credentials validated. Bologna pre-admission letter issued.",
-    "consulate": "Italian Embassy in Algiers (VFS Global)",
-    "dsuEligibility": "Calculated upon translation of family income records",
-    "documents": [],
-    "updatedAt": "2026-09-21T22:57:26.744Z"
   },
   {
     "id": "OWI-2026-2489",
@@ -267,514 +297,6 @@
         "url": "/uploads/1790031101409-615480182-Capture_d___cran_2026-08-26_131845.png",
         "size": "0.48 MB",
         "uploadedAt": "2026-09-21T22:51:41.438Z"
-      }
-    ]
-  },
-  {
-    "id": "OWI-2026-1655",
-    "createdAt": "2026-09-21T22:40:26.508Z",
-    "fullName": "Karim Zerrouki",
-    "email": "karim.zerrouki@gmail.com",
-    "phone": "+213 670 11 22 33",
-    "wilaya": "16 - Alger",
-    "studyLevel": "Master",
-    "field": "Artificial Intelligence",
-    "language": "English",
-    "gpa": "16.20 / 20",
-    "bacYear": "2023",
-    "currentDegree": "Licence Math-Info",
-    "universities": [
-      "University of Bologna",
-      "Politecnico di Milano"
-    ],
-    "status": "Universitaly Validated",
-    "statusNote": "All credentials validated. Bologna pre-admission letter issued.",
-    "consulate": "Italian Embassy in Algiers (VFS Global)",
-    "dsuEligibility": "Calculated upon translation of family income records",
-    "documents": [],
-    "updatedAt": "2026-09-21T22:40:26.549Z"
-  },
-  {
-    "id": "OWI-2026-6804",
-    "createdAt": "2026-09-21T22:37:49.665Z",
-    "fullName": "Karim Zerrouki",
-    "email": "karim.zerrouki@gmail.com",
-    "phone": "+213 670 11 22 33",
-    "wilaya": "16 - Alger",
-    "studyLevel": "Master",
-    "field": "Artificial Intelligence",
-    "language": "English",
-    "gpa": "16.20 / 20",
-    "bacYear": "2023",
-    "currentDegree": "Licence Math-Info",
-    "universities": [
-      "University of Bologna",
-      "Politecnico di Milano"
-    ],
-    "status": "Universitaly Validated",
-    "statusNote": "All credentials validated. Bologna pre-admission letter issued.",
-    "consulate": "Italian Embassy in Algiers (VFS Global)",
-    "dsuEligibility": "Calculated upon translation of family income records",
-    "documents": [],
-    "updatedAt": "2026-09-21T22:37:49.707Z"
-  },
-  {
-    "id": "OWI-2026-1998",
-    "createdAt": "2026-09-21T22:33:12.517Z",
-    "fullName": "Karim Zerrouki",
-    "email": "karim.zerrouki@gmail.com",
-    "phone": "+213 670 11 22 33",
-    "wilaya": "16 - Alger",
-    "studyLevel": "Master",
-    "field": "Artificial Intelligence",
-    "language": "English",
-    "gpa": "16.20 / 20",
-    "bacYear": "2023",
-    "currentDegree": "Licence Math-Info",
-    "universities": [
-      "University of Bologna",
-      "Politecnico di Milano"
-    ],
-    "status": "Universitaly Validated",
-    "statusNote": "All credentials validated. Bologna pre-admission letter issued.",
-    "consulate": "Italian Embassy in Algiers (VFS Global)",
-    "dsuEligibility": "Calculated upon translation of family income records",
-    "documents": [],
-    "updatedAt": "2026-09-21T22:33:12.549Z"
-  },
-  {
-    "id": "OWI-2026-9387",
-    "createdAt": "2026-09-21T22:29:00.615Z",
-    "fullName": "Karim Zerrouki",
-    "email": "karim.zerrouki@gmail.com",
-    "phone": "+213 670 11 22 33",
-    "wilaya": "16 - Alger",
-    "studyLevel": "Master",
-    "field": "Artificial Intelligence",
-    "language": "English",
-    "gpa": "16.20 / 20",
-    "bacYear": "2023",
-    "currentDegree": "Licence Math-Info",
-    "universities": [
-      "University of Bologna",
-      "Politecnico di Milano"
-    ],
-    "status": "Universitaly Validated",
-    "statusNote": "All credentials validated. Bologna pre-admission letter issued.",
-    "consulate": "Italian Embassy in Algiers (VFS Global)",
-    "dsuEligibility": "Calculated upon translation of family income records",
-    "documents": [],
-    "updatedAt": "2026-09-21T22:29:00.635Z"
-  },
-  {
-    "id": "OWI-2026-6361",
-    "createdAt": "2026-09-21T22:25:24.025Z",
-    "fullName": "Karim Zerrouki",
-    "email": "karim.zerrouki@gmail.com",
-    "phone": "+213 670 11 22 33",
-    "wilaya": "16 - Alger",
-    "studyLevel": "Master",
-    "field": "Artificial Intelligence",
-    "language": "English",
-    "gpa": "16.20 / 20",
-    "bacYear": "2023",
-    "currentDegree": "Licence Math-Info",
-    "universities": [
-      "University of Bologna",
-      "Politecnico di Milano"
-    ],
-    "status": "Universitaly Validated",
-    "statusNote": "All credentials validated. Bologna pre-admission letter issued.",
-    "consulate": "Italian Embassy in Algiers (VFS Global)",
-    "dsuEligibility": "Calculated upon translation of family income records",
-    "documents": [],
-    "updatedAt": "2026-09-21T22:25:24.061Z"
-  },
-  {
-    "id": "OWI-2026-7589",
-    "createdAt": "2026-09-21T16:11:47.887Z",
-    "fullName": "Karim Zerrouki",
-    "email": "karim.zerrouki@gmail.com",
-    "phone": "+213 670 11 22 33",
-    "wilaya": "16 - Alger",
-    "studyLevel": "Master",
-    "field": "Artificial Intelligence",
-    "language": "English",
-    "gpa": "16.20 / 20",
-    "bacYear": "2023",
-    "currentDegree": "Licence Math-Info",
-    "universities": [
-      "University of Bologna",
-      "Politecnico di Milano"
-    ],
-    "status": "Universitaly Validated",
-    "statusNote": "All credentials validated. Bologna pre-admission letter issued.",
-    "consulate": "Italian Embassy in Algiers (VFS Global)",
-    "dsuEligibility": "Calculated upon translation of family income records",
-    "documents": [],
-    "updatedAt": "2026-09-21T16:11:47.916Z"
-  },
-  {
-    "id": "OWI-2026-2463",
-    "createdAt": "2026-09-21T16:09:02.726Z",
-    "fullName": "Karim Zerrouki",
-    "email": "karim.zerrouki@gmail.com",
-    "phone": "+213 670 11 22 33",
-    "wilaya": "16 - Alger",
-    "studyLevel": "Master",
-    "field": "Artificial Intelligence",
-    "language": "English",
-    "gpa": "16.20 / 20",
-    "bacYear": "2023",
-    "currentDegree": "Licence Math-Info",
-    "universities": [
-      "University of Bologna",
-      "Politecnico di Milano"
-    ],
-    "status": "Universitaly Validated",
-    "statusNote": "All credentials validated. Bologna pre-admission letter issued.",
-    "consulate": "Italian Embassy in Algiers (VFS Global)",
-    "dsuEligibility": "Calculated upon translation of family income records",
-    "documents": [],
-    "updatedAt": "2026-09-21T16:09:02.745Z"
-  },
-  {
-    "id": "OWI-2026-3936",
-    "createdAt": "2026-09-21T15:35:00.376Z",
-    "fullName": "Karim Zerrouki",
-    "email": "karim.zerrouki@gmail.com",
-    "phone": "+213 670 11 22 33",
-    "wilaya": "16 - Alger",
-    "studyLevel": "Master",
-    "field": "Artificial Intelligence",
-    "language": "English",
-    "gpa": "16.20 / 20",
-    "bacYear": "2023",
-    "currentDegree": "Licence Math-Info",
-    "universities": [
-      "University of Bologna",
-      "Politecnico di Milano"
-    ],
-    "status": "Universitaly Validated",
-    "statusNote": "All credentials validated. Bologna pre-admission letter issued.",
-    "consulate": "Italian Embassy in Algiers (VFS Global)",
-    "dsuEligibility": "Calculated upon translation of family income records",
-    "documents": [],
-    "updatedAt": "2026-09-21T15:35:00.395Z"
-  },
-  {
-    "id": "OWI-2026-3413",
-    "createdAt": "2026-09-21T15:29:56.186Z",
-    "fullName": "Karim Zerrouki",
-    "email": "karim.zerrouki@gmail.com",
-    "phone": "+213 670 11 22 33",
-    "wilaya": "16 - Alger",
-    "studyLevel": "Master",
-    "field": "Artificial Intelligence",
-    "language": "English",
-    "gpa": "16.20 / 20",
-    "bacYear": "2023",
-    "currentDegree": "Licence Math-Info",
-    "universities": [
-      "University of Bologna",
-      "Politecnico di Milano"
-    ],
-    "status": "Universitaly Validated",
-    "statusNote": "All credentials validated. Bologna pre-admission letter issued.",
-    "consulate": "Italian Embassy in Algiers (VFS Global)",
-    "dsuEligibility": "Calculated upon translation of family income records",
-    "documents": [],
-    "updatedAt": "2026-09-21T15:29:56.207Z"
-  },
-  {
-    "id": "OWI-2026-3370",
-    "createdAt": "2026-09-21T15:24:46.695Z",
-    "fullName": "Karim Zerrouki",
-    "email": "karim.zerrouki@gmail.com",
-    "phone": "+213 670 11 22 33",
-    "wilaya": "16 - Alger",
-    "studyLevel": "Master",
-    "field": "Artificial Intelligence",
-    "language": "English",
-    "gpa": "16.20 / 20",
-    "bacYear": "2023",
-    "currentDegree": "Licence Math-Info",
-    "universities": [
-      "University of Bologna",
-      "Politecnico di Milano"
-    ],
-    "status": "Universitaly Validated",
-    "statusNote": "All credentials validated. Bologna pre-admission letter issued.",
-    "consulate": "Italian Embassy in Algiers (VFS Global)",
-    "dsuEligibility": "Calculated upon translation of family income records",
-    "documents": [],
-    "updatedAt": "2026-09-21T15:24:46.706Z"
-  },
-  {
-    "id": "OWI-2026-4249",
-    "createdAt": "2026-09-21T15:16:20.423Z",
-    "fullName": "Karim Zerrouki",
-    "email": "karim.zerrouki@gmail.com",
-    "phone": "+213 670 11 22 33",
-    "wilaya": "16 - Alger",
-    "studyLevel": "Master",
-    "field": "Artificial Intelligence",
-    "language": "English",
-    "gpa": "16.20 / 20",
-    "bacYear": "2023",
-    "currentDegree": "Licence Math-Info",
-    "universities": [
-      "University of Bologna",
-      "Politecnico di Milano"
-    ],
-    "status": "Universitaly Validated",
-    "statusNote": "All credentials validated. Bologna pre-admission letter issued.",
-    "consulate": "Italian Embassy in Algiers (VFS Global)",
-    "dsuEligibility": "Calculated upon translation of family income records",
-    "documents": [],
-    "updatedAt": "2026-09-21T15:16:20.460Z"
-  },
-  {
-    "id": "OWI-2026-4836",
-    "createdAt": "2026-09-21T14:54:18.527Z",
-    "fullName": "Karim Zerrouki",
-    "email": "karim.zerrouki@gmail.com",
-    "phone": "+213 670 11 22 33",
-    "wilaya": "16 - Alger",
-    "studyLevel": "Master",
-    "field": "Artificial Intelligence",
-    "language": "English",
-    "gpa": "16.20 / 20",
-    "bacYear": "2023",
-    "currentDegree": "Licence Math-Info",
-    "universities": [
-      "University of Bologna",
-      "Politecnico di Milano"
-    ],
-    "status": "Universitaly Validated",
-    "statusNote": "All credentials validated. Bologna pre-admission letter issued.",
-    "consulate": "Italian Embassy in Algiers (VFS Global)",
-    "dsuEligibility": "Calculated upon translation of family income records",
-    "documents": [],
-    "updatedAt": "2026-09-21T14:54:18.557Z"
-  },
-  {
-    "id": "OWI-2026-1183",
-    "createdAt": "2026-09-21T14:31:45.771Z",
-    "fullName": "Karim Zerrouki",
-    "email": "karim.zerrouki@gmail.com",
-    "phone": "+213 670 11 22 33",
-    "wilaya": "16 - Alger",
-    "studyLevel": "Master",
-    "field": "Artificial Intelligence",
-    "language": "English",
-    "gpa": "16.20 / 20",
-    "bacYear": "2023",
-    "currentDegree": "Licence Math-Info",
-    "universities": [
-      "University of Bologna",
-      "Politecnico di Milano"
-    ],
-    "status": "Universitaly Validated",
-    "statusNote": "All credentials validated. Bologna pre-admission letter issued.",
-    "consulate": "Italian Embassy in Algiers (VFS Global)",
-    "dsuEligibility": "Calculated upon translation of family income records",
-    "documents": [],
-    "updatedAt": "2026-09-21T14:31:45.812Z"
-  },
-  {
-    "id": "OWI-2026-9620",
-    "createdAt": "2026-09-21T14:25:54.202Z",
-    "fullName": "Karim Zerrouki",
-    "email": "karim.zerrouki@gmail.com",
-    "phone": "+213 670 11 22 33",
-    "wilaya": "16 - Alger",
-    "studyLevel": "Master",
-    "field": "Artificial Intelligence",
-    "language": "English",
-    "gpa": "16.20 / 20",
-    "bacYear": "2023",
-    "currentDegree": "Licence Math-Info",
-    "universities": [
-      "University of Bologna",
-      "Politecnico di Milano"
-    ],
-    "status": "Universitaly Validated",
-    "statusNote": "All credentials validated. Bologna pre-admission letter issued.",
-    "consulate": "Italian Embassy in Algiers (VFS Global)",
-    "dsuEligibility": "Calculated upon translation of family income records",
-    "documents": [],
-    "updatedAt": "2026-09-21T14:25:54.235Z"
-  },
-  {
-    "id": "OWI-2026-8942",
-    "createdAt": "2026-09-18T10:15:00.000Z",
-    "fullName": "Amine Benali",
-    "email": "amine.benali@gmail.com",
-    "phone": "+213 550 12 34 56",
-    "wilaya": "16 - Alger",
-    "studyLevel": "Master",
-    "field": "Computer Science & AI",
-    "language": "English",
-    "gpa": "15.40 / 20 (Très Bien)",
-    "bacYear": "2022",
-    "currentDegree": "Licence Informatique (USTHB)",
-    "universities": [
-      "University of Padua",
-      "Politecnico di Milano",
-      "University of Bologna"
-    ],
-    "status": "Universitaly Validated",
-    "statusNote": "Universitaly summary-A approved by Padova. Proceeding to Consular file preparation for Algiers VFS.",
-    "consulate": "Italian Embassy in Algiers (VFS Global)",
-    "dsuEligibility": "High (Estimated ISEE < €12,000)",
-    "documents": [
-      {
-        "name": "Passport_Amine_Benali.pdf",
-        "type": "Passport",
-        "size": "1.2 MB",
-        "uploadedAt": "2026-09-18T10:16:00.000Z"
-      },
-      {
-        "name": "Releves_Notes_Licence_L1_L3.pdf",
-        "type": "Transcripts",
-        "size": "3.8 MB",
-        "uploadedAt": "2026-09-18T10:16:20.000Z"
-      },
-      {
-        "name": "Attestation_Reussite_USTHB.pdf",
-        "type": "Diploma",
-        "size": "980 KB",
-        "uploadedAt": "2026-09-18T10:17:00.000Z"
-      },
-      {
-        "name": "IELTS_Academic_6.5.pdf",
-        "type": "Language Certificate",
-        "size": "650 KB",
-        "uploadedAt": "2026-09-18T10:17:15.000Z"
-      }
-    ]
-  },
-  {
-    "id": "OWI-2026-7815",
-    "createdAt": "2026-09-19T14:30:00.000Z",
-    "fullName": "Yasmine Khelifi",
-    "email": "yasmine.khelifi.dz@outlook.com",
-    "phone": "+213 661 88 92 10",
-    "wilaya": "31 - Oran",
-    "studyLevel": "Master",
-    "field": "Economics & Finance",
-    "language": "English",
-    "gpa": "14.85 / 20 (Bien)",
-    "bacYear": "2021",
-    "currentDegree": "Licence Sciences Économiques (Univ. Oran 2)",
-    "universities": [
-      "Sapienza University of Rome",
-      "University of Rome Tor Vergata",
-      "University of Siena"
-    ],
-    "status": "Under Review",
-    "statusNote": "Academic dossier translated into Italian. Legalization of Diplomas pending at Ministry of Foreign Affairs (MAE Algiers).",
-    "consulate": "Italian Embassy in Algiers (VFS Global)",
-    "dsuEligibility": "Eligible for DiSCo Lazio Full Grant",
-    "documents": [
-      {
-        "name": "Passeport_Yasmine.pdf",
-        "type": "Passport",
-        "size": "1.4 MB",
-        "uploadedAt": "2026-09-19T14:31:00.000Z"
-      },
-      {
-        "name": "Traduction_Assermentee_Releves.pdf",
-        "type": "Transcripts",
-        "size": "2.9 MB",
-        "uploadedAt": "2026-09-19T14:32:00.000Z"
-      },
-      {
-        "name": "Curriculum_Vitae_Europass.pdf",
-        "type": "CV",
-        "size": "410 KB",
-        "uploadedAt": "2026-09-19T14:33:00.000Z"
-      }
-    ]
-  },
-  {
-    "id": "OWI-2026-9204",
-    "createdAt": "2026-09-20T09:00:00.000Z",
-    "fullName": "Rayane Boumaza",
-    "email": "rayane.boumaza25@gmail.com",
-    "phone": "+213 770 44 19 83",
-    "wilaya": "25 - Constantine",
-    "studyLevel": "Master",
-    "field": "Mechanical & Automotive Engineering",
-    "language": "English",
-    "gpa": "16.10 / 20 (Très Bien)",
-    "bacYear": "2022",
-    "currentDegree": "Licence Génie Mécanique (Univ. Constantine 1)",
-    "universities": [
-      "Politecnico di Torino",
-      "University of Modena and Reggio Emilia",
-      "Politecnico di Milano"
-    ],
-    "status": "Visa Stage",
-    "statusNote": "Consular interview scheduled at Italian Consulate General in Annaba for July 12. Blocked account certificate ready.",
-    "consulate": "Italian Consulate General in Annaba",
-    "dsuEligibility": "EDISU Piemonte Pre-Approved",
-    "documents": [
-      {
-        "name": "Rayane_Boumaza_Passport.pdf",
-        "type": "Passport",
-        "size": "1.5 MB",
-        "uploadedAt": "2026-09-20T09:05:00.000Z"
-      },
-      {
-        "name": "Polito_Offer_Letter_Fall2026.pdf",
-        "type": "Admission Letter",
-        "size": "820 KB",
-        "uploadedAt": "2026-09-20T09:06:00.000Z"
-      },
-      {
-        "name": "Universitaly_SummaryA_PoliTO.pdf",
-        "type": "Universitaly Summary",
-        "size": "450 KB",
-        "uploadedAt": "2026-09-20T09:07:00.000Z"
-      }
-    ]
-  },
-  {
-    "id": "OWI-2026-6119",
-    "createdAt": "2026-09-21T08:20:00.000Z",
-    "fullName": "Sarah Meziani",
-    "email": "sarah.meziani@yahoo.fr",
-    "phone": "+213 555 77 12 90",
-    "wilaya": "19 - Sétif",
-    "studyLevel": "Bachelor",
-    "field": "Medicine & Surgery (IMAT Track)",
-    "language": "English",
-    "gpa": "17.20 / 20 (Bac Mention Très Bien)",
-    "bacYear": "2025",
-    "currentDegree": "Baccalauréat Série Sciences Expérimentales",
-    "universities": [
-      "University of Milan",
-      "University of Pavia",
-      "University of Rome Tor Vergata"
-    ],
-    "status": "Pending Review",
-    "statusNote": "Initial dossier received. Checking eligibility for IMAT exam registration and Universitaly declaration.",
-    "consulate": "Italian Embassy in Algiers (VFS Global)",
-    "dsuEligibility": "High",
-    "documents": [
-      {
-        "name": "Baccalaureat_Releve_Sarah.pdf",
-        "type": "Diploma",
-        "size": "1.1 MB",
-        "uploadedAt": "2026-09-21T08:22:00.000Z"
-      },
-      {
-        "name": "Passport_Sarah_Meziani.pdf",
-        "type": "Passport",
-        "size": "1.3 MB",
-        "uploadedAt": "2026-09-21T08:23:00.000Z"
       }
     ]
   }

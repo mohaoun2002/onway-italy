@@ -327,6 +327,15 @@ export default function AdminDashboard({ isOpen, onClose, initialApplications = 
                         </td>
                       </tr>
                     ))}
+                    {filteredApps.length === 0 && (
+                      <tr>
+                        <td colSpan="7" className="p-12 text-center text-slate-400">
+                          <FileText className="w-8 h-8 text-slate-600 mx-auto mb-2" />
+                          <p className="text-sm font-semibold text-white">No applications or dossiers found</p>
+                          <p className="text-xs text-slate-500 mt-1">Submitted student applications will appear here in real time.</p>
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>

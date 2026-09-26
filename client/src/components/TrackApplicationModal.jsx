@@ -71,7 +71,7 @@ export default function TrackApplicationModal({ isOpen, onClose }) {
           {/* Search Input Bar */}
           <form onSubmit={handleTrack} className="space-y-3">
             <label className="text-xs font-semibold text-slate-300 block">
-              Enter your OnWay Italy Reference (e.g. OWI-2026-8942)
+              Enter your OnWay Italy Reference (e.g. OWI-2026-XXXX)
             </label>
             <div className="flex gap-2">
               <div className="relative flex-1">
@@ -90,29 +90,6 @@ export default function TrackApplicationModal({ isOpen, onClose }) {
                 className="px-5 py-2.5 bg-italia-green hover:bg-emerald-600 text-white rounded-xl text-xs font-bold shadow-green-glow disabled:opacity-50"
               >
                 {loading ? 'Checking...' : 'Track'}
-              </button>
-            </div>
-            {/* Demo suggestion */}
-            <div className="flex items-center gap-2 text-[11px] text-slate-400">
-              <span>Try demo code:</span>
-              <button
-                type="button"
-                onClick={() => {
-                  setTrackingId('OWI-2026-8942');
-                }}
-                className="text-emerald-400 hover:underline font-mono"
-              >
-                OWI-2026-8942
-              </button>
-              <span>or</span>
-              <button
-                type="button"
-                onClick={() => {
-                  setTrackingId('OWI-2026-9204');
-                }}
-                className="text-emerald-400 hover:underline font-mono"
-              >
-                OWI-2026-9204
               </button>
             </div>
           </form>

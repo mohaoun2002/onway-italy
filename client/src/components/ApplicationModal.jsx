@@ -641,14 +641,6 @@ export default function ApplicationModal({ isOpen, onClose, preselectedUni, onAp
                       </div>
                     </div>
                   </div>
-
-                  <div className="p-3 rounded-xl bg-italia-green/10 border border-italia-green/30 text-slate-300">
-                    <div className="flex items-center gap-1.5 text-italia-green font-bold mb-0.5">
-                      <CheckCircle2 className="w-4 h-4" />
-                      <span>Free Eligibility Audit Guarantee</span>
-                    </div>
-                    <span>No fees are charged until your dossier is accepted by your chosen Italian university.</span>
-                  </div>
                 </div>
               )}
 
