@@ -27,9 +27,12 @@ export default function App() {
       try {
         const res = await fetch('/api/universities');
         if (res.ok) {
-          const data = await res.json();
-          if (data?.universities && data.universities.length > 0) {
-            setUniversities(data.universities);
+          const contentType = res.headers.get('content-type') || '';
+          if (contentType.includes('application/json')) {
+            const data = await res.json();
+            if (data?.universities && data.universities.length > 0) {
+              setUniversities(data.universities);
+            }
           }
         }
       } catch (err) {

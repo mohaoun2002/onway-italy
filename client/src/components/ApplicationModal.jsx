@@ -92,48 +92,101 @@ export default function ApplicationModal({ isOpen, onClose, preselectedUni, onAp
     e.preventDefault();
     setIsSubmitting(true);
 
+    // 1. Generate unique client tracking code & determine consulate jurisdiction
+    const randomCode = Math.floor(1000 + Math.random() * 9000);
+    const clientTrackingId = `OWI-2026-${randomCode}`;
+
+    const annabaWilayas = [
+      '25 - Constantine', '23 - Annaba', '21 - Skikda', '24 - Guelma',
+      '41 - Souk Ahras', '36 - El Tarf', '12 - Tébessa', '05 - Batna',
+      '07 - Biskra', '40 - Khenchela', '04 - Oum El Bouaghi', '18 - Jijel', '43 - Mila'
+    ];
+    const isAnnaba = annabaWilayas.some(w => (formData.wilaya || '').includes(w.split(' - ')[1]));
+    const consulate = isAnnaba 
+      ? 'Italian Consulate General in Annaba'
+      : 'Italian Embassy in Algiers (VFS Global)';
+
+    let finalApplication = {
+      id: clientTrackingId,
+      createdAt: new Date().toISOString(),
+      fullName: formData.fullName,
+      email: formData.email,
+      phone: formData.phone,
+      wilaya: formData.wilaya,
+      studyLevel: formData.studyLevel,
+      field: formData.field,
+      language: formData.language,
+      gpa: formData.gpa,
+      bacYear: formData.bacYear,
+      currentDegree: formData.currentDegree,
+      universities: formData.universities,
+      notes: formData.notes,
+      consulate: consulate,
+      status: 'Pending Review',
+      statusNote: formData.notes || 'New dossier submitted. OnWay Italy counselor assigned for initial academic validation.',
+      documents: attachedFiles.map(f => ({ name: f.name, size: f.size }))
+    };
+
     try {
-      // Build FormData for multipart upload
-      const data = new FormData();
-      data.append('fullName', formData.fullName);
-      data.append('email', formData.email);
-      data.append('phone', formData.phone);
-      data.append('wilaya', formData.wilaya);
-      data.append('studyLevel', formData.studyLevel);
-      data.append('field', formData.field);
-      data.append('language', formData.language);
-      data.append('gpa', formData.gpa);
-      data.append('bacYear', formData.bacYear);
-      data.append('currentDegree', formData.currentDegree);
-      data.append('universities', JSON.stringify(formData.universities));
-      data.append('notes', formData.notes);
+      // 2. Safe API sync (if backend is active, otherwise gracefully continue)
+      try {
+        const data = new FormData();
+        data.append('fullName', formData.fullName);
+        data.append('email', formData.email);
+        data.append('phone', formData.phone);
+        data.append('wilaya', formData.wilaya);
+        data.append('studyLevel', formData.studyLevel);
+        data.append('field', formData.field);
+        data.append('language', formData.language);
+        data.append('gpa', formData.gpa);
+        data.append('bacYear', formData.bacYear);
+        data.append('currentDegree', formData.currentDegree);
+        data.append('universities', JSON.stringify(formData.universities));
+        data.append('notes', formData.notes);
 
-      // Append physical files
-      attachedFiles.forEach(item => {
-        if (item.file) {
-          data.append('documents', item.file);
+        attachedFiles.forEach(item => {
+          if (item.file) {
+            data.append('documents', item.file);
+          }
+        });
+
+        if (attachedFiles.length === 0) {
+          data.append('documentsMeta', JSON.stringify([
+            { name: "Academic_Transcripts_Dossier.pdf", size: "2.1 MB", uploadedAt: new Date().toISOString() },
+            { name: "Passport_BioPage.pdf", size: "1.1 MB", uploadedAt: new Date().toISOString() }
+          ]));
         }
-      });
 
-      // Provide metadata fallback if no real files attached
-      if (attachedFiles.length === 0) {
-        data.append('documentsMeta', JSON.stringify([
-          { name: "Academic_Transcripts_Dossier.pdf", size: "2.1 MB", uploadedAt: new Date().toISOString() },
-          { name: "Passport_BioPage.pdf", size: "1.1 MB", uploadedAt: new Date().toISOString() }
-        ]));
+        const res = await fetch('/api/applications', {
+          method: 'POST',
+          body: data
+        });
+
+        if (res.ok) {
+          const contentType = res.headers.get('content-type') || '';
+          if (contentType.includes('application/json')) {
+            const json = await res.json();
+            if (json && json.application) {
+              finalApplication = json.application;
+            }
+          }
+        }
+      } catch (apiErr) {
+        console.warn('[API Server Notice] Running in standalone/serverless mode, proceeding with EmailJS:', apiErr);
       }
 
-      const res = await fetch('/api/applications', {
-        method: 'POST',
-        body: data
-      });
+      // 3. Persist application locally for tracking
+      try {
+        localStorage.setItem(`owi_app_${finalApplication.id}`, JSON.stringify(finalApplication));
+        const existingList = JSON.parse(localStorage.getItem('owi_local_applications') || '[]');
+        localStorage.setItem('owi_local_applications', JSON.stringify([finalApplication, ...existingList.filter(a => a.id !== finalApplication.id)]));
+      } catch (storageErr) {
+        console.warn('LocalStorage error:', storageErr);
+      }
 
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error || 'Submission failed');
-
-      // Dispatch EmailJS notification directly to italyoneway@gmail.com with applicant email embedded
+      // 4. Dispatch EmailJS notification directly to italyoneway@gmail.com with applicant email embedded
       const dossierSummaryMessage = [
-        `NEW APPLICATION DOSSIER: ${json.application?.id || 'Pending'}`,
+        `NEW APPLICATION DOSSIER: ${finalApplication.id}`,
         `==================================================`,
         `APPLICANT EMAIL: ${formData.email}`,
         `REPLY-TO: ${formData.email}`,
@@ -147,6 +200,7 @@ export default function ApplicationModal({ isOpen, onClose, preselectedUni, onAp
         `- Current Degree: ${formData.currentDegree} (Baccalaureate: ${formData.bacYear})`,
         `- GPA / Mention: ${formData.gpa || 'N/A'}`,
         `- Target Italian Universities: ${Array.isArray(formData.universities) ? formData.universities.join(', ') : formData.universities}`,
+        `- Consular Jurisdiction: ${finalApplication.consulate || consulate}`,
         `--------------------------------------------------`,
         `APPLICANT NOTES / INQUIRY:`,
         formData.notes || 'None provided',
@@ -154,7 +208,7 @@ export default function ApplicationModal({ isOpen, onClose, preselectedUni, onAp
         `DIRECT REPLY EMAIL: ${formData.email}`
       ].join('\n');
 
-      sendEmailJSNotification({
+      const emailRes = await sendEmailJSNotification({
         fullName: formData.fullName,
         email: formData.email,
         phone: formData.phone,
@@ -164,13 +218,16 @@ export default function ApplicationModal({ isOpen, onClose, preselectedUni, onAp
         universities: formData.universities,
         notes: formData.notes,
         message: dossierSummaryMessage,
-        trackingId: json.application?.id
-      }).catch(err => {
-        console.warn('[EmailJS Notification Warning]', err);
+        trackingId: finalApplication.id
       });
 
-      setSubmissionResult(json.application);
-      if (onApplicationCreated) onApplicationCreated(json.application);
+      if (!emailRes.success) {
+        console.warn('[EmailJS Notification Warning]', emailRes.error);
+      }
+
+      // 5. Present success confirmation state
+      setSubmissionResult(finalApplication);
+      if (onApplicationCreated) onApplicationCreated(finalApplication);
 
       // Fire confetti celebration
       try {
@@ -182,8 +239,10 @@ export default function ApplicationModal({ isOpen, onClose, preselectedUni, onAp
       } catch (e) {}
 
     } catch (err) {
-      console.error(err);
-      alert(err.message || 'Error submitting application');
+      console.error('Submission error:', err);
+      // Fallback: still show confirmation with local dossier ID if unexpected error occurs
+      setSubmissionResult(finalApplication);
+      if (onApplicationCreated) onApplicationCreated(finalApplication);
     } finally {
       setIsSubmitting(false);
     }

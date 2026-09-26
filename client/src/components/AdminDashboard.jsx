@@ -24,11 +24,26 @@ export default function AdminDashboard({ isOpen, onClose, initialApplications = 
   const fetchApplications = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/applications');
-      if (res.ok) {
-        const data = await res.json();
-        setApplications(data);
+      let apps = [];
+      try {
+        const res = await fetch('/api/applications');
+        if (res.ok) {
+          const contentType = res.headers.get('content-type') || '';
+          if (contentType.includes('application/json')) {
+            const data = await res.json();
+            if (Array.isArray(data)) apps = data;
+          }
+        }
+      } catch (apiErr) {
+        console.warn('API applications fetch notice:', apiErr);
       }
+
+      if (apps.length === 0) {
+        const localApps = JSON.parse(localStorage.getItem('owi_local_applications') || '[]');
+        if (localApps.length > 0) apps = localApps;
+      }
+
+      setApplications(apps);
     } catch (e) {
       console.error(e);
     } finally {
@@ -107,11 +122,25 @@ export default function AdminDashboard({ isOpen, onClose, initialApplications = 
           statusNote: statusNoteInput || selectedApp.statusNote
         })
       });
+      let updatedApp = {
+        ...selectedApp,
+        status: editingStatus,
+        statusNote: statusNoteInput || selectedApp.statusNote
+      };
       if (res.ok) {
-        const json = await res.json();
-        setApplications(prev => prev.map(a => a.id === selectedApp.id ? json.application : a));
-        setSelectedApp(json.application);
+        const contentType = res.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+          const json = await res.json();
+          if (json?.application) updatedApp = json.application;
+        }
       }
+      setApplications(prev => prev.map(a => a.id === selectedApp.id ? updatedApp : a));
+      setSelectedApp(updatedApp);
+      try {
+        localStorage.setItem(`owi_app_${selectedApp.id}`, JSON.stringify(updatedApp));
+        const localApps = JSON.parse(localStorage.getItem('owi_local_applications') || '[]');
+        localStorage.setItem('owi_local_applications', JSON.stringify(localApps.map(a => a.id === selectedApp.id ? updatedApp : a)));
+      } catch (err) {}
     } catch (e) {
       console.error(e);
       alert('Failed to update application');

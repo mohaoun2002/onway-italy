@@ -18,12 +18,39 @@ export default function TrackApplicationModal({ isOpen, onClose }) {
     setApplication(null);
 
     try {
-      const res = await fetch(`/api/applications/${encodeURIComponent(trackingId.trim().toUpperCase())}`);
-      if (!res.ok) {
-        throw new Error("No application found with tracking code " + trackingId);
+      const cleanId = trackingId.trim().toUpperCase();
+      let foundData = null;
+
+      try {
+        const res = await fetch(`/api/applications/${encodeURIComponent(cleanId)}`);
+        if (res.ok) {
+          const contentType = res.headers.get('content-type') || '';
+          if (contentType.includes('application/json')) {
+            const data = await res.json();
+            if (data && !data.error) {
+              foundData = data;
+            }
+          }
+        }
+      } catch (apiErr) {
+        console.warn('API lookup warning:', apiErr);
       }
-      const data = await res.json();
-      setApplication(data);
+
+      // Check client-side stored application if API was unavailable or not found
+      if (!foundData) {
+        const localRecord = localStorage.getItem(`owi_app_${cleanId}`);
+        if (localRecord) {
+          try {
+            foundData = JSON.parse(localRecord);
+          } catch (e) {}
+        }
+      }
+
+      if (foundData) {
+        setApplication(foundData);
+      } else {
+        throw new Error("No application found with tracking code " + cleanId);
+      }
     } catch (err) {
       setError(err.message || 'Failed to locate application dossier');
     } finally {
