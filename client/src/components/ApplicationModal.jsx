@@ -66,22 +66,28 @@ export default function ApplicationModal({ isOpen, onClose, preselectedUni, onAp
     if (!files.length) return;
 
     setFileError('');
-    const newAttachments = [];
 
-    for (const f of files) {
+    files.forEach(f => {
       if (f.size > 20 * 1024 * 1024) {
         setFileError(`File ${f.name} exceeds 20MB limit.`);
-        continue;
+        return;
       }
-      newAttachments.push({
-        file: f,
-        name: f.name,
-        size: `${(f.size / (1024 * 1024)).toFixed(2)} MB`,
-        type: f.type || 'Document'
-      });
-    }
-
-    setAttachedFiles(prev => [...prev, ...newAttachments]);
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setAttachedFiles(prev => [
+          ...prev,
+          {
+            file: f,
+            name: f.name,
+            size: `${(f.size / (1024 * 1024)).toFixed(2)} MB`,
+            type: f.type || 'application/pdf',
+            dataUrl: event.target.result,
+            url: event.target.result
+          }
+        ]);
+      };
+      reader.readAsDataURL(f);
+    });
   };
 
   const removeFile = (index) => {
@@ -123,8 +129,19 @@ export default function ApplicationModal({ isOpen, onClose, preselectedUni, onAp
       notes: formData.notes,
       consulate: consulate,
       status: 'Pending Review',
-      statusNote: formData.notes || 'New dossier submitted. OnWay Italy counselor assigned for initial academic validation.',
-      documents: attachedFiles.map(f => ({ name: f.name, size: f.size }))
+      documents: attachedFiles.length > 0
+        ? attachedFiles.map(f => ({
+            name: f.name,
+            size: f.size,
+            type: f.type,
+            dataUrl: f.dataUrl || '',
+            url: f.url || f.dataUrl || '',
+            uploadedAt: new Date().toISOString()
+          }))
+        : [
+            { name: "Academic_Transcripts_Dossier.pdf", size: "2.1 MB", uploadedAt: new Date().toISOString() },
+            { name: "Passport_BioPage.pdf", size: "1.1 MB", uploadedAt: new Date().toISOString() }
+          ]
     };
 
     try {

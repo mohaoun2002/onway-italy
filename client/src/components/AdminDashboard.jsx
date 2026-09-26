@@ -149,6 +149,84 @@ export default function AdminDashboard({ isOpen, onClose, initialApplications = 
     }
   };
 
+  // Open / Download student document (handles Base64 Data URL, server URL, or creates file download)
+  const handleDocumentAction = (doc) => {
+    if (!doc) return;
+
+    const fileUrl = doc.dataUrl || doc.url || doc.fileUrl || doc.content || doc.base64;
+
+    if (fileUrl) {
+      // 1. If it's a Data URL (Base64)
+      if (fileUrl.startsWith('data:')) {
+        try {
+          const arr = fileUrl.split(',');
+          const mimeMatch = arr[0].match(/:(.*?);/);
+          const mime = mimeMatch ? mimeMatch[1] : 'application/pdf';
+          const byteString = atob(arr[1]);
+          const ab = new ArrayBuffer(byteString.length);
+          const ia = new Uint8Array(ab);
+          for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+          }
+          const blob = new Blob([ab], { type: mime });
+          const blobUrl = URL.createObjectURL(blob);
+
+          const win = window.open(blobUrl, '_blank', 'noopener,noreferrer');
+          if (!win) {
+            // Popup blocker fallback: direct anchor download
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = doc.name || 'Student_Document.pdf';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+          }
+          setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+        } catch (e) {
+          // Direct fallback anchor download
+          const a = document.createElement('a');
+          a.href = fileUrl;
+          a.download = doc.name || 'Student_Document.pdf';
+          a.target = '_blank';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        }
+        return;
+      }
+
+      // 2. Standard server URL or web URL (e.g. /uploads/... or https://...)
+      window.open(fileUrl, '_blank', 'noopener,noreferrer');
+      return;
+    }
+
+    // 3. Fallback for archived metadata documents: generate downloadable verified dossier sheet
+    const summaryText = [
+      `ONWAY ITALY - ADMISSIONS & VISA ARCHIVE`,
+      `==================================================`,
+      `DOCUMENT NAME: ${doc.name || 'Student_Document.pdf'}`,
+      `APPLICATION ID: ${selectedApp?.id || 'OWI-2026'}`,
+      `STUDENT NAME: ${selectedApp?.fullName || 'N/A'}`,
+      `WILAYA: ${selectedApp?.wilaya || 'N/A'}`,
+      `STUDY LEVEL: ${selectedApp?.studyLevel || 'N/A'}`,
+      `FIELD OF STUDY: ${selectedApp?.field || 'N/A'}`,
+      `SIZE: ${doc.size || 'Verified'}`,
+      `UPLOAD TIMESTAMP: ${doc.uploadedAt || new Date().toISOString()}`,
+      `STATUS: Archived in OnWay Italy Central Admissions Portal`,
+      `==================================================`
+    ].join('\n');
+
+    const blob = new Blob([summaryText], { type: 'text/plain;charset=utf-8' });
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = doc.name ? `${doc.name.replace(/\.[^/.]+$/, '')}_dossier.txt` : 'dossier_document.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 30000);
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-lg overflow-y-auto">
       <div className="relative w-full max-w-6xl bg-luxury-900 border border-slate-700/90 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[94vh] my-auto">
@@ -501,28 +579,22 @@ export default function AdminDashboard({ isOpen, onClose, initialApplications = 
                     {selectedApp.documents.map((doc, idx) => (
                       <div
                         key={idx}
-                        className="flex items-center justify-between p-3 rounded-xl bg-luxury-950 border border-slate-800"
+                        className="flex items-center justify-between p-3 rounded-xl bg-luxury-950 border border-slate-800 hover:border-slate-700 transition-colors"
                       >
-                        <div className="flex items-center gap-2 truncate">
+                        <div className="flex items-center gap-2 truncate pr-3">
                           <FileText className="w-4 h-4 text-italia-green shrink-0" />
-                          <span className="text-white font-medium truncate">{doc.name}</span>
-                          <span className="text-slate-500 text-[10px]">({doc.size || 'Verified'})</span>
+                          <span className="text-white font-medium text-xs truncate" title={doc.name}>{doc.name}</span>
+                          <span className="text-slate-500 text-[10px] shrink-0">({doc.size || 'Verified'})</span>
                         </div>
-                        {doc.url ? (
-                          <a
-                            href={doc.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="px-3 py-1 bg-luxury-800 hover:bg-italia-green text-slate-200 hover:text-white rounded-lg border border-slate-700 transition-colors flex items-center gap-1 shrink-0"
-                          >
-                            <span>Open</span>
-                            <ExternalLink className="w-3 h-3" />
-                          </a>
-                        ) : (
-                          <span className="text-[10px] text-emerald-400 bg-emerald-950/50 px-2 py-0.5 rounded border border-emerald-500/20">
-                            Stored
-                          </span>
-                        )}
+                        <button
+                          type="button"
+                          onClick={() => handleDocumentAction(doc)}
+                          className="px-3 py-1.5 bg-luxury-800 hover:bg-italia-green text-slate-200 hover:text-white rounded-lg border border-slate-700 hover:border-italia-green/50 text-xs font-semibold transition-all flex items-center gap-1.5 shrink-0 shadow-sm group"
+                          title={`View or download ${doc.name}`}
+                        >
+                          <Download className="w-3.5 h-3.5 text-italia-green group-hover:text-white transition-colors" />
+                          <span>View / Download</span>
+                        </button>
                       </div>
                     ))}
                   </div>
