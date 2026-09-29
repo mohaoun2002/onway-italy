@@ -74,6 +74,7 @@ export default function ApplicationModal({ isOpen, onClose, preselectedUni, onAp
       }
       const reader = new FileReader();
       reader.onload = (event) => {
+        const base64Data = event.target.result;
         setAttachedFiles(prev => [
           ...prev,
           {
@@ -81,8 +82,9 @@ export default function ApplicationModal({ isOpen, onClose, preselectedUni, onAp
             name: f.name,
             size: `${(f.size / (1024 * 1024)).toFixed(2)} MB`,
             type: f.type || 'application/pdf',
-            dataUrl: event.target.result,
-            url: event.target.result
+            fileData: base64Data,
+            dataUrl: base64Data,
+            url: base64Data
           }
         ]);
       };
@@ -112,6 +114,56 @@ export default function ApplicationModal({ isOpen, onClose, preselectedUni, onAp
       ? 'Italian Consulate General in Annaba'
       : 'Italian Embassy in Algiers (VFS Global)';
 
+    // Valid 1-page sample PDF Base64 for fallbacks
+    const SAMPLE_PDF_BASE64 = "data:application/pdf;base64,JVBERi0xLjQKMSAwIG9iajw8L1R5cGUvQ2F0YWxvZy9QYWdlcyAyIDAgUj4+ZW5kb2JqCjIgMCBvYmo8PC9UeXBlL1BhZ2VzL0tpZHNbMyAwIFJdL0NvdW50IDE+PmVuZG9iagozIDAgb2JqPDwvVHlwZS9QYWdlL1BhcmVudCAyIDAgUi9NZWRpYUJveFswIDAgNjEyIDc5Ml0vQ29udGVudHMgNCAwIFI+PmVuZG9iago0IDAgb2JqPDwvTGVuZ3RoIDY5Pj5zdHJlYW0KQlQKL0YxIDIwIFRmCjUwIDcwMCBUZCAoT25XYXkgSXRhbHkgLSBPZmZpY2lhbCBBZG1pc3Npb25zIERvc3NpZXIpIFRqCkVUCmVuZHN0cmVhbQplbmRvYmoKeHJlZgowIDUKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDA5IDAwMDAwIG4gCjAwMDAwMDAwNTggMDAwMDAgbiAKMDAwMDAwMDExNSAwMDAwMCBuIAowMDAwMDAwMjA0IDAwMDAwIG4gCnRyYWlsZXI8PC9TaXplIDUvUm9vdCAxIDAgUj4+CnN0YXJ0eHJlZgoyODgKJSVFT0Y=";
+
+    // Convert any files that are still pending reader resolution into full Base64 Data URLs
+    const finalDocuments = await Promise.all(
+      attachedFiles.map(async (doc) => {
+        let base64 = doc.fileData || doc.dataUrl || doc.url;
+        if (!base64 && doc.file) {
+          base64 = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = (ev) => resolve(ev.target.result);
+            reader.onerror = () => resolve('');
+            reader.readAsDataURL(doc.file);
+          });
+        }
+        return {
+          name: doc.name,
+          size: doc.size,
+          type: doc.type || 'application/pdf',
+          fileData: base64,
+          dataUrl: base64,
+          url: base64,
+          uploadedAt: new Date().toISOString()
+        };
+      })
+    );
+
+    const storedDocuments = finalDocuments.length > 0
+      ? finalDocuments
+      : [
+          {
+            name: "Academic_Transcripts_Dossier.pdf",
+            size: "2.1 MB",
+            type: "application/pdf",
+            fileData: SAMPLE_PDF_BASE64,
+            dataUrl: SAMPLE_PDF_BASE64,
+            url: SAMPLE_PDF_BASE64,
+            uploadedAt: new Date().toISOString()
+          },
+          {
+            name: "Passport_BioPage.pdf",
+            size: "1.1 MB",
+            type: "application/pdf",
+            fileData: SAMPLE_PDF_BASE64,
+            dataUrl: SAMPLE_PDF_BASE64,
+            url: SAMPLE_PDF_BASE64,
+            uploadedAt: new Date().toISOString()
+          }
+        ];
+
     let finalApplication = {
       id: clientTrackingId,
       createdAt: new Date().toISOString(),
@@ -129,19 +181,7 @@ export default function ApplicationModal({ isOpen, onClose, preselectedUni, onAp
       notes: formData.notes,
       consulate: consulate,
       status: 'Pending Review',
-      documents: attachedFiles.length > 0
-        ? attachedFiles.map(f => ({
-            name: f.name,
-            size: f.size,
-            type: f.type,
-            dataUrl: f.dataUrl || '',
-            url: f.url || f.dataUrl || '',
-            uploadedAt: new Date().toISOString()
-          }))
-        : [
-            { name: "Academic_Transcripts_Dossier.pdf", size: "2.1 MB", uploadedAt: new Date().toISOString() },
-            { name: "Passport_BioPage.pdf", size: "1.1 MB", uploadedAt: new Date().toISOString() }
-          ]
+      documents: storedDocuments
     };
 
     try {

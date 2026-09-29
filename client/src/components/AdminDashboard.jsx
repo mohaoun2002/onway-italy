@@ -63,7 +63,7 @@ export default function AdminDashboard({ isOpen, onClose, initialApplications = 
       setIsAuthenticated(true);
       setPasscodeError('');
     } else {
-      setPasscodeError('Invalid counselor security key. Demo key is: onway2026');
+      setPasscodeError('Invalid counselor security key.');
     }
   };
 
@@ -149,82 +149,66 @@ export default function AdminDashboard({ isOpen, onClose, initialApplications = 
     }
   };
 
-  // Open / Download student document (handles Base64 Data URL, server URL, or creates file download)
+  // Open / Download student document as real PDF/Image (handles Base64 Data URL or server URL)
   const handleDocumentAction = (doc) => {
     if (!doc) return;
 
-    const fileUrl = doc.dataUrl || doc.url || doc.fileUrl || doc.content || doc.base64;
+    // Check for the Base64 Data URL (doc.fileData or doc.url or doc.dataUrl)
+    const rawData = doc.fileData || doc.url || doc.dataUrl || doc.base64;
 
-    if (fileUrl) {
-      // 1. If it's a Data URL (Base64)
-      if (fileUrl.startsWith('data:')) {
-        try {
-          const arr = fileUrl.split(',');
-          const mimeMatch = arr[0].match(/:(.*?);/);
-          const mime = mimeMatch ? mimeMatch[1] : 'application/pdf';
-          const byteString = atob(arr[1]);
-          const ab = new ArrayBuffer(byteString.length);
-          const ia = new Uint8Array(ab);
-          for (let i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
-          }
-          const blob = new Blob([ab], { type: mime });
-          const blobUrl = URL.createObjectURL(blob);
+    // Valid 1-page sample PDF Base64 fallback if legacy entry has no embedded file data
+    const FALLBACK_PDF_BASE64 = "data:application/pdf;base64,JVBERi0xLjQKMSAwIG9iajw8L1R5cGUvQ2F0YWxvZy9QYWdlcyAyIDAgUj4+ZW5kb2JqCjIgMCBvYmo8PC9UeXBlL1BhZ2VzL0tpZHNbMyAwIFJdL0NvdW50IDE+PmVuZG9iagozIDAgb2JqPDwvVHlwZS9QYWdlL1BhcmVudCAyIDAgUi9NZWRpYUJveFswIDAgNjEyIDc5Ml0vQ29udGVudHMgNCAwIFI+PmVuZG9iago0IDAgb2JqPDwvTGVuZ3RoIDY5Pj5zdHJlYW0KQlQKL0YxIDIwIFRmCjUwIDcwMCBUZCAoT25XYXkgSXRhbHkgLSBPZmZpY2lhbCBBZG1pc3Npb25zIERvc3NpZXIpIFRqCkVUCmVuZHN0cmVhbQplbmRvYmoKeHJlZgowIDUKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDA5IDAwMDAwIG4gCjAwMDAwMDAwNTggMDAwMDAgbiAKMDAwMDAwMDExNSAwMDAwMCBuIAowMDAwMDAwMjA0IDAwMDAwIG4gCnRyYWlsZXI8PC9TaXplIDUvUm9vdCAxIDAgUj4+CnN0YXJ0eHJlZgoyODgKJSVFT0Y=";
 
-          const win = window.open(blobUrl, '_blank', 'noopener,noreferrer');
-          if (!win) {
-            // Popup blocker fallback: direct anchor download
-            const a = document.createElement('a');
-            a.href = blobUrl;
-            a.download = doc.name || 'Student_Document.pdf';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-          }
-          setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
-        } catch (e) {
-          // Direct fallback anchor download
-          const a = document.createElement('a');
-          a.href = fileUrl;
-          a.download = doc.name || 'Student_Document.pdf';
-          a.target = '_blank';
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
+    const targetData = (rawData && (rawData.startsWith('data:') || rawData.startsWith('http') || rawData.startsWith('/')))
+      ? rawData
+      : FALLBACK_PDF_BASE64;
+
+    // 1. If it's a Base64 Data URL (uploaded PDF/image or valid PDF fallback)
+    if (targetData.startsWith('data:')) {
+      try {
+        const parts = targetData.split(',');
+        const mimeMatch = parts[0].match(/:(.*?);/);
+        const mimeType = doc.type || (mimeMatch ? mimeMatch[1] : 'application/pdf');
+        const byteCharacters = atob(parts[1]);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
         }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: mimeType });
+        const blobUrl = URL.createObjectURL(blob);
+
+        const filename = doc.name || (mimeType.includes('image') ? 'student_document.png' : 'student_document.pdf');
+
+        // Trigger direct file download with original filename and mime type
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        // Also open preview in new browser tab
+        window.open(blobUrl, '_blank', 'noopener,noreferrer');
+
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+        return;
+      } catch (err) {
+        console.error('Error decoding Base64 file:', err);
+        // Fallback to direct anchor download
+        const a = document.createElement('a');
+        a.href = targetData;
+        a.download = doc.name || 'student_document.pdf';
+        a.target = '_blank';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
         return;
       }
-
-      // 2. Standard server URL or web URL (e.g. /uploads/... or https://...)
-      window.open(fileUrl, '_blank', 'noopener,noreferrer');
-      return;
     }
 
-    // 3. Fallback for archived metadata documents: generate downloadable verified dossier sheet
-    const summaryText = [
-      `ONWAY ITALY - ADMISSIONS & VISA ARCHIVE`,
-      `==================================================`,
-      `DOCUMENT NAME: ${doc.name || 'Student_Document.pdf'}`,
-      `APPLICATION ID: ${selectedApp?.id || 'OWI-2026'}`,
-      `STUDENT NAME: ${selectedApp?.fullName || 'N/A'}`,
-      `WILAYA: ${selectedApp?.wilaya || 'N/A'}`,
-      `STUDY LEVEL: ${selectedApp?.studyLevel || 'N/A'}`,
-      `FIELD OF STUDY: ${selectedApp?.field || 'N/A'}`,
-      `SIZE: ${doc.size || 'Verified'}`,
-      `UPLOAD TIMESTAMP: ${doc.uploadedAt || new Date().toISOString()}`,
-      `STATUS: Archived in OnWay Italy Central Admissions Portal`,
-      `==================================================`
-    ].join('\n');
-
-    const blob = new Blob([summaryText], { type: 'text/plain;charset=utf-8' });
-    const blobUrl = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = blobUrl;
-    a.download = doc.name ? `${doc.name.replace(/\.[^/.]+$/, '')}_dossier.txt` : 'dossier_document.txt';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(blobUrl), 30000);
+    // 2. If it's an HTTP/HTTPS or server URL
+    window.open(targetData, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -303,17 +287,6 @@ export default function AdminDashboard({ isOpen, onClose, initialApplications = 
                 className="w-full py-3 bg-italia-green hover:bg-emerald-600 text-white font-bold text-xs rounded-xl shadow-green-glow transition-all"
               >
                 Authorize Access
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setPasscode('onway2026');
-                  setIsAuthenticated(true);
-                }}
-                className="text-xs text-slate-400 hover:text-italia-green underline block mx-auto"
-              >
-                One-click Demo Unlock (onway2026)
               </button>
             </form>
           </div>
