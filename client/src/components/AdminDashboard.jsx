@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Shield, Search, Lock, Filter, CheckCircle2, Clock, AlertTriangle, FileText, Download, ExternalLink, MessageCircle, Mail, RefreshCw, X, ArrowUpRight } from 'lucide-react';
+import { Shield, Search, Lock, Filter, CheckCircle2, Clock, AlertTriangle, FileText, Download, ExternalLink, MessageCircle, Mail, RefreshCw, X, ArrowUpRight, Cloud } from 'lucide-react';
 import { WILAYAS_ALGERIA } from '../data/universitiesData';
+import { fetchAllApplications, updateApplicationStatus } from '../services/db';
 
 export default function AdminDashboard({ isOpen, onClose, initialApplications = [] }) {
   if (!isOpen) return null;
@@ -20,32 +21,16 @@ export default function AdminDashboard({ isOpen, onClose, initialApplications = 
   const [statusNoteInput, setStatusNoteInput] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
 
-  // Fetch applications from server
+  // Fetch applications from central cloud database & server
   const fetchApplications = async () => {
     setLoading(true);
     try {
-      let apps = [];
-      try {
-        const res = await fetch('/api/applications');
-        if (res.ok) {
-          const contentType = res.headers.get('content-type') || '';
-          if (contentType.includes('application/json')) {
-            const data = await res.json();
-            if (Array.isArray(data)) apps = data;
-          }
-        }
-      } catch (apiErr) {
-        console.warn('API applications fetch notice:', apiErr);
+      const data = await fetchAllApplications();
+      if (Array.isArray(data) && data.length > 0) {
+        setApplications(data);
       }
-
-      if (apps.length === 0) {
-        const localApps = JSON.parse(localStorage.getItem('owi_local_applications') || '[]');
-        if (localApps.length > 0) apps = localApps;
-      }
-
-      setApplications(apps);
     } catch (e) {
-      console.error(e);
+      console.error('Error syncing applications:', e);
     } finally {
       setLoading(false);
     }
@@ -114,33 +99,15 @@ export default function AdminDashboard({ isOpen, onClose, initialApplications = 
     if (!selectedApp || !editingStatus) return;
     setIsUpdating(true);
     try {
-      const res = await fetch(`/api/applications/${selectedApp.id}/status`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          status: editingStatus,
-          statusNote: statusNoteInput || selectedApp.statusNote
-        })
-      });
-      let updatedApp = {
+      const newNote = statusNoteInput || selectedApp.statusNote;
+      await updateApplicationStatus(selectedApp.id, editingStatus, newNote);
+      const updatedApp = {
         ...selectedApp,
         status: editingStatus,
-        statusNote: statusNoteInput || selectedApp.statusNote
+        statusNote: newNote
       };
-      if (res.ok) {
-        const contentType = res.headers.get('content-type') || '';
-        if (contentType.includes('application/json')) {
-          const json = await res.json();
-          if (json?.application) updatedApp = json.application;
-        }
-      }
       setApplications(prev => prev.map(a => a.id === selectedApp.id ? updatedApp : a));
       setSelectedApp(updatedApp);
-      try {
-        localStorage.setItem(`owi_app_${selectedApp.id}`, JSON.stringify(updatedApp));
-        const localApps = JSON.parse(localStorage.getItem('owi_local_applications') || '[]');
-        localStorage.setItem('owi_local_applications', JSON.stringify(localApps.map(a => a.id === selectedApp.id ? updatedApp : a)));
-      } catch (err) {}
     } catch (e) {
       console.error(e);
       alert('Failed to update application');
@@ -237,14 +204,21 @@ export default function AdminDashboard({ isOpen, onClose, initialApplications = 
 
           <div className="flex items-center gap-2">
             {isAuthenticated && (
-              <button
-                onClick={fetchApplications}
-                disabled={loading}
-                className="p-2 text-slate-400 hover:text-white rounded-xl bg-luxury-800 hover:bg-luxury-700 transition-colors"
-                title="Refresh applications"
-              >
-                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-              </button>
+              <div className="flex items-center gap-2">
+                <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-950/60 border border-emerald-500/30 text-[10px] text-emerald-400 font-medium">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  Cloud Database Synced
+                </span>
+                <button
+                  onClick={fetchApplications}
+                  disabled={loading}
+                  className="p-2 text-slate-400 hover:text-white rounded-xl bg-luxury-800 hover:bg-luxury-700 transition-colors flex items-center gap-1.5 text-xs"
+                  title="Sync applications from cloud database"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-italia-green' : ''}`} />
+                  <span className="hidden md:inline text-[11px]">Sync Cloud</span>
+                </button>
+              </div>
             )}
             <button
               onClick={onClose}

@@ -9,7 +9,7 @@ async function main() {
 
   if (!repoUrl) {
     console.log('Usage: node scripts/push.js <GITHUB_REPO_URL> [GITHUB_TOKEN]');
-    console.log('Example: node scripts/push.js https://github.com/username/my-repo.git ghp_xxxxxx');
+    console.log('Example: node scripts/push.js https://github.com/username/my-repo.git <TOKEN>');
     process.exit(1);
   }
 

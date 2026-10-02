@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Search, CheckCircle2, Clock, FileText, AlertCircle, MapPin, Building, Shield } from 'lucide-react';
+import { getApplicationById } from '../services/db';
 
 export default function TrackApplicationModal({ isOpen, onClose }) {
   if (!isOpen) return null;
@@ -19,32 +20,7 @@ export default function TrackApplicationModal({ isOpen, onClose }) {
 
     try {
       const cleanId = trackingId.trim().toUpperCase();
-      let foundData = null;
-
-      try {
-        const res = await fetch(`/api/applications/${encodeURIComponent(cleanId)}`);
-        if (res.ok) {
-          const contentType = res.headers.get('content-type') || '';
-          if (contentType.includes('application/json')) {
-            const data = await res.json();
-            if (data && !data.error) {
-              foundData = data;
-            }
-          }
-        }
-      } catch (apiErr) {
-        console.warn('API lookup warning:', apiErr);
-      }
-
-      // Check client-side stored application if API was unavailable or not found
-      if (!foundData) {
-        const localRecord = localStorage.getItem(`owi_app_${cleanId}`);
-        if (localRecord) {
-          try {
-            foundData = JSON.parse(localRecord);
-          } catch (e) {}
-        }
-      }
+      const foundData = await getApplicationById(cleanId);
 
       if (foundData) {
         setApplication(foundData);

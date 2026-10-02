@@ -3,6 +3,7 @@ import { X, CheckCircle2, ChevronRight, ChevronLeft, Upload, FileText, Trash2, S
 import confetti from 'canvas-confetti';
 import { UNIVERSITIES_DATA, WILAYAS_ALGERIA } from '../data/universitiesData';
 import { sendEmailJSNotification } from '../services/emailjs';
+import { saveApplication } from '../services/db';
 
 export default function ApplicationModal({ isOpen, onClose, preselectedUni, onApplicationCreated }) {
   if (!isOpen) return null;
@@ -185,60 +186,11 @@ export default function ApplicationModal({ isOpen, onClose, preselectedUni, onAp
     };
 
     try {
-      // 2. Safe API sync (if backend is active, otherwise gracefully continue)
+      // 2. Persist application in central cloud database and local cache
       try {
-        const data = new FormData();
-        data.append('fullName', formData.fullName);
-        data.append('email', formData.email);
-        data.append('phone', formData.phone);
-        data.append('wilaya', formData.wilaya);
-        data.append('studyLevel', formData.studyLevel);
-        data.append('field', formData.field);
-        data.append('language', formData.language);
-        data.append('gpa', formData.gpa);
-        data.append('bacYear', formData.bacYear);
-        data.append('currentDegree', formData.currentDegree);
-        data.append('universities', JSON.stringify(formData.universities));
-        data.append('notes', formData.notes);
-
-        attachedFiles.forEach(item => {
-          if (item.file) {
-            data.append('documents', item.file);
-          }
-        });
-
-        if (attachedFiles.length === 0) {
-          data.append('documentsMeta', JSON.stringify([
-            { name: "Academic_Transcripts_Dossier.pdf", size: "2.1 MB", uploadedAt: new Date().toISOString() },
-            { name: "Passport_BioPage.pdf", size: "1.1 MB", uploadedAt: new Date().toISOString() }
-          ]));
-        }
-
-        const res = await fetch('/api/applications', {
-          method: 'POST',
-          body: data
-        });
-
-        if (res.ok) {
-          const contentType = res.headers.get('content-type') || '';
-          if (contentType.includes('application/json')) {
-            const json = await res.json();
-            if (json && json.application) {
-              finalApplication = json.application;
-            }
-          }
-        }
-      } catch (apiErr) {
-        console.warn('[API Server Notice] Running in standalone/serverless mode, proceeding with EmailJS:', apiErr);
-      }
-
-      // 3. Persist application locally for tracking
-      try {
-        localStorage.setItem(`owi_app_${finalApplication.id}`, JSON.stringify(finalApplication));
-        const existingList = JSON.parse(localStorage.getItem('owi_local_applications') || '[]');
-        localStorage.setItem('owi_local_applications', JSON.stringify([finalApplication, ...existingList.filter(a => a.id !== finalApplication.id)]));
-      } catch (storageErr) {
-        console.warn('LocalStorage error:', storageErr);
+        await saveApplication(finalApplication);
+      } catch (dbErr) {
+        console.warn('[Cloud DB Notice] Local save active, background cloud sync error:', dbErr);
       }
 
       // 4. Dispatch EmailJS notification directly to italyoneway@gmail.com with applicant email embedded
