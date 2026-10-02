@@ -134,51 +134,60 @@ export default function TrackApplicationModal({ isOpen, onClose }) {
               <div className="grid grid-cols-2 gap-3 text-xs p-4 rounded-2xl bg-luxury-950/60 border border-slate-800">
                 <div>
                   <span className="text-slate-500 block">Candidate:</span>
-                  <strong className="text-white">{application.fullName}</strong>
+                  <strong className="text-white">{application.fullName || 'Registered Applicant'}</strong>
                 </div>
                 <div>
                   <span className="text-slate-500 block">Wilaya:</span>
-                  <strong className="text-white">{application.wilaya}</strong>
+                  <strong className="text-white">{application.wilaya || 'Algeria'}</strong>
                 </div>
                 <div>
                   <span className="text-slate-500 block">Target Degree:</span>
-                  <strong className="text-emerald-400">{application.studyLevel} ({application.language})</strong>
+                  <strong className="text-emerald-400">
+                    {application.studyLevel || 'Degree Program'} {application.language ? `(${application.language})` : ''}
+                  </strong>
                 </div>
                 <div>
                   <span className="text-slate-500 block">Academic Field:</span>
-                  <strong className="text-slate-200">{application.field}</strong>
+                  <strong className="text-slate-200">{application.field || 'General Studies'}</strong>
                 </div>
               </div>
 
               {/* Consulate Jurisdiction */}
               <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex items-center gap-2.5 text-xs text-slate-300">
                 <MapPin className="w-4 h-4 text-italia-red shrink-0" />
-                <span>Assigned Consulate: <strong className="text-white">{application.consulate}</strong></span>
+                <span>Assigned Consulate: <strong className="text-white">{application.consulate || 'Algiers (VFS Global)'}</strong></span>
               </div>
 
               {/* Target Universities */}
               <div>
                 <span className="text-xs font-bold text-slate-400 block mb-2">Selected Universities:</span>
                 <div className="space-y-1.5">
-                  {application.universities.map((u, i) => (
-                    <div key={i} className="p-2.5 rounded-lg bg-luxury-950 border border-slate-800 text-xs text-slate-200 flex items-center gap-2">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-italia-green shrink-0" />
-                      <span>{u}</span>
+                  {Array.isArray(application.universities) && application.universities.length > 0 ? (
+                    application.universities.map((u, i) => (
+                      <div key={i} className="p-2.5 rounded-lg bg-luxury-950 border border-slate-800 text-xs text-slate-200 flex items-center gap-2">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-italia-green shrink-0" />
+                        <span>{u}</span>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="p-2.5 rounded-lg bg-luxury-950 border border-slate-800 text-xs text-slate-400 flex items-center gap-2">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-slate-600 shrink-0" />
+                      <span>{typeof application.universities === 'string' && application.universities ? application.universities : 'All 67 Italian Institutions (General)'}</span>
                     </div>
-                  ))}
+                  )}
                 </div>
               </div>
 
               {/* Documents Logged */}
-              {application.documents && application.documents.length > 0 && (
+              {Array.isArray(application.documents) && application.documents.length > 0 && (
                 <div>
                   <span className="text-xs font-bold text-slate-400 block mb-2">Attached Documents ({application.documents.length}):</span>
                   <div className="space-y-1.5">
-                    {application.documents.map((doc, idx) => (
+                    {application.documents.filter(Boolean).map((doc, idx) => (
                       <div key={idx} className="p-2 rounded-lg bg-luxury-950 border border-slate-800 text-xs flex items-center justify-between text-slate-300">
                         <div className="flex items-center gap-2 truncate">
                           <FileText className="w-3.5 h-3.5 text-italia-green shrink-0" />
-                          <span className="truncate">{doc.name}</span>
+                          <span className="truncate">{doc.name || `Document #${idx + 1}`}</span>
                         </div>
                         <span className="text-[10px] text-slate-500">{doc.size || 'Verified'}</span>
                       </div>

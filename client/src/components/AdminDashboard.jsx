@@ -3,6 +3,44 @@ import { Shield, Search, Lock, Filter, CheckCircle2, Clock, AlertTriangle, FileT
 import { WILAYAS_ALGERIA } from '../data/universitiesData';
 import { fetchAllApplications, updateApplicationStatus } from '../services/db';
 
+class DashboardErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, errorInfo) {
+    console.error("Dashboard error caught:", error, errorInfo);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="p-8 text-center max-w-md mx-auto my-auto space-y-4">
+          <div className="w-12 h-12 rounded-2xl bg-rose-950/40 border border-rose-500/40 flex items-center justify-center mx-auto text-rose-400">
+            <AlertTriangle className="w-6 h-6" />
+          </div>
+          <h4 className="text-xl font-bold text-white">Dashboard Encountered an Issue</h4>
+          <p className="text-xs text-slate-400">
+            A dataset item format issue was caught safely. Click below to reload the applications list.
+          </p>
+          <button
+            onClick={() => {
+              this.setState({ hasError: false, error: null });
+              if (this.props.onReset) this.props.onReset();
+            }}
+            className="px-5 py-2.5 bg-italia-green hover:bg-emerald-600 text-white rounded-xl text-xs font-bold shadow-green-glow"
+          >
+            Reload Dashboard
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 export default function AdminDashboard({ isOpen, onClose, initialApplications = [] }) {
   if (!isOpen) return null;
 
@@ -70,13 +108,27 @@ export default function AdminDashboard({ isOpen, onClose, initialApplications = 
 
   // Filtered applications
   const filteredApps = useMemo(() => {
+    if (!Array.isArray(applications)) return [];
     return applications.filter(a => {
-      const matchSearch =
-        a.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        a.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        a.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        a.wilaya.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        a.field.toLowerCase().includes(searchQuery.toLowerCase());
+      if (!a || typeof a !== 'object') return false;
+      const q = (searchQuery || '').trim().toLowerCase();
+
+      const name = String(a.fullName || '').toLowerCase();
+      const email = String(a.email || '').toLowerCase();
+      const id = String(a.id || '').toLowerCase();
+      const wilaya = String(a.wilaya || '').toLowerCase();
+      const field = String(a.field || '').toLowerCase();
+      const unisMatch = Array.isArray(a.universities)
+        ? a.universities.some(u => String(u || '').toLowerCase().includes(q))
+        : false;
+
+      const matchSearch = !q ||
+        name.includes(q) ||
+        email.includes(q) ||
+        id.includes(q) ||
+        wilaya.includes(q) ||
+        field.includes(q) ||
+        unisMatch;
 
       const matchStatus = statusFilter === 'all' || a.status === statusFilter;
       return matchSearch && matchStatus;
@@ -85,12 +137,13 @@ export default function AdminDashboard({ isOpen, onClose, initialApplications = 
 
   // Statistics
   const stats = useMemo(() => {
+    const list = Array.isArray(applications) ? applications.filter(a => a && typeof a === 'object') : [];
     return {
-      total: applications.length,
-      pending: applications.filter(a => a.status === 'Pending Review' || a.status === 'Under Review').length,
-      universitaly: applications.filter(a => a.status === 'Universitaly Validated').length,
-      visa: applications.filter(a => a.status === 'Visa Stage').length,
-      approved: applications.filter(a => a.status === 'Approved').length,
+      total: list.length,
+      pending: list.filter(a => a?.status === 'Pending Review' || a?.status === 'Under Review').length,
+      universitaly: list.filter(a => a?.status === 'Universitaly Validated').length,
+      visa: list.filter(a => a?.status === 'Visa Stage').length,
+      approved: list.filter(a => a?.status === 'Approved').length,
     };
   }, [applications]);
 
@@ -99,14 +152,14 @@ export default function AdminDashboard({ isOpen, onClose, initialApplications = 
     if (!selectedApp || !editingStatus) return;
     setIsUpdating(true);
     try {
-      const newNote = statusNoteInput || selectedApp.statusNote;
+      const newNote = statusNoteInput || selectedApp.statusNote || '';
       await updateApplicationStatus(selectedApp.id, editingStatus, newNote);
       const updatedApp = {
         ...selectedApp,
         status: editingStatus,
         statusNote: newNote
       };
-      setApplications(prev => prev.map(a => a.id === selectedApp.id ? updatedApp : a));
+      setApplications(prev => Array.isArray(prev) ? prev.map(a => a?.id === selectedApp.id ? updatedApp : a) : [updatedApp]);
       setSelectedApp(updatedApp);
     } catch (e) {
       console.error(e);
@@ -180,7 +233,8 @@ export default function AdminDashboard({ isOpen, onClose, initialApplications = 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-lg overflow-y-auto">
-      <div className="relative w-full max-w-6xl bg-luxury-900 border border-slate-700/90 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[94vh] my-auto">
+      <DashboardErrorBoundary onReset={fetchApplications}>
+        <div className="relative w-full max-w-6xl bg-luxury-900 border border-slate-700/90 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[94vh] my-auto">
         
         {/* Top tricolor bar */}
         <div className="h-1.5 bg-gradient-to-r from-italia-green via-white to-italia-red" />
@@ -338,49 +392,66 @@ export default function AdminDashboard({ isOpen, onClose, initialApplications = 
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800/60">
-                    {filteredApps.map((app) => (
-                      <tr
-                        key={app.id}
-                        className="hover:bg-luxury-800/40 transition-colors"
-                      >
-                        <td className="p-4 font-mono font-bold text-white">
-                          {app.id}
-                        </td>
-                        <td className="p-4">
-                          <div className="font-bold text-white">{app.fullName}</div>
-                          <div className="text-[11px] text-slate-400">{app.wilaya} • {app.phone}</div>
-                        </td>
-                        <td className="p-4 max-w-xs truncate">
-                          <div className="font-medium text-slate-200 truncate">
-                            {app.universities.join(', ')}
-                          </div>
-                        </td>
-                        <td className="p-4">
-                          <span className="font-semibold text-emerald-400">{app.studyLevel}</span>
-                          <span className="block text-[11px] text-slate-400">{app.field}</span>
-                        </td>
-                        <td className="p-4">
-                          <span className="text-[11px] text-slate-300">{app.consulate}</span>
-                        </td>
-                        <td className="p-4">
-                          <span className={`px-2.5 py-1 rounded-full text-[11px] font-bold border ${getBadgeStyle(app.status)}`}>
-                            {app.status}
-                          </span>
-                        </td>
-                        <td className="p-4 text-right">
-                          <button
-                            onClick={() => {
-                              setSelectedApp(app);
-                              setEditingStatus(app.status);
-                              setStatusNoteInput(app.statusNote || '');
-                            }}
-                            className="px-3 py-1.5 rounded-lg bg-luxury-800 hover:bg-italia-green hover:text-white border border-slate-700 text-slate-200 transition-all font-semibold"
-                          >
-                            Manage Dossier
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
+                    {filteredApps.map((app, index) => {
+                      if (!app) return null;
+                      const appId = app.id || `OWI-${index}`;
+                      const fullName = app.fullName || 'Registered Applicant';
+                      const wilaya = app.wilaya || 'Algeria';
+                      const phone = app.phone || '';
+                      const universitiesText = Array.isArray(app.universities) && app.universities.length > 0
+                        ? app.universities.join(', ')
+                        : (typeof app.universities === 'string' && app.universities ? app.universities : 'General Admissions Dossier');
+                      const studyLevel = app.studyLevel || 'Degree Track';
+                      const field = app.field || 'General Studies';
+                      const consulate = app.consulate || 'Algiers (VFS Global)';
+                      const status = app.status || 'Pending Review';
+
+                      return (
+                        <tr
+                          key={appId}
+                          className="hover:bg-luxury-800/40 transition-colors"
+                        >
+                          <td className="p-4 font-mono font-bold text-white">
+                            {appId}
+                          </td>
+                          <td className="p-4">
+                            <div className="font-bold text-white">{fullName}</div>
+                            <div className="text-[11px] text-slate-400">
+                              {wilaya} {phone ? `• ${phone}` : ''}
+                            </div>
+                          </td>
+                          <td className="p-4 max-w-xs truncate">
+                            <div className="font-medium text-slate-200 truncate" title={universitiesText}>
+                              {universitiesText}
+                            </div>
+                          </td>
+                          <td className="p-4">
+                            <span className="font-semibold text-emerald-400">{studyLevel}</span>
+                            <span className="block text-[11px] text-slate-400">{field}</span>
+                          </td>
+                          <td className="p-4">
+                            <span className="text-[11px] text-slate-300">{consulate}</span>
+                          </td>
+                          <td className="p-4">
+                            <span className={`px-2.5 py-1 rounded-full text-[11px] font-bold border ${getBadgeStyle(status)}`}>
+                              {status}
+                            </span>
+                          </td>
+                          <td className="p-4 text-right">
+                            <button
+                              onClick={() => {
+                                setSelectedApp(app);
+                                setEditingStatus(status);
+                                setStatusNoteInput(app.statusNote || '');
+                              }}
+                              className="px-3 py-1.5 rounded-lg bg-luxury-800 hover:bg-italia-green hover:text-white border border-slate-700 text-slate-200 transition-all font-semibold"
+                            >
+                              Manage Dossier
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
                     {filteredApps.length === 0 && (
                       <tr>
                         <td colSpan="7" className="p-12 text-center text-slate-400">
@@ -410,15 +481,17 @@ export default function AdminDashboard({ isOpen, onClose, initialApplications = 
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <span className="font-mono text-xs font-bold text-emerald-400 bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-500/30">
-                    {selectedApp.id}
+                    {selectedApp.id || 'N/A'}
                   </span>
-                  <span className="text-xs text-slate-400">Created {new Date(selectedApp.createdAt).toLocaleDateString()}</span>
+                  <span className="text-xs text-slate-400">
+                    Created {selectedApp.createdAt ? new Date(selectedApp.createdAt).toLocaleDateString() : 'Active Dossier'}
+                  </span>
                 </div>
                 <h3 className="text-2xl font-bold text-white font-display">
-                  {selectedApp.fullName}
+                  {selectedApp.fullName || 'Registered Applicant'}
                 </h3>
                 <p className="text-xs text-slate-400">
-                  {selectedApp.wilaya} • {selectedApp.currentDegree}
+                  {selectedApp.wilaya || 'Algeria'} • {selectedApp.currentDegree || 'Student Profile'}
                 </p>
               </div>
               <button
@@ -433,22 +506,26 @@ export default function AdminDashboard({ isOpen, onClose, initialApplications = 
               
               {/* Direct Algerian Contact Buttons */}
               <div className="flex flex-wrap gap-3">
-                <a
-                  href={`https://wa.me/${selectedApp.phone.replace(/[^0-9]/g, '')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold flex items-center gap-2 shadow-sm transition-all"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  <span>WhatsApp Student ({selectedApp.phone})</span>
-                </a>
-                <a
-                  href={`mailto:${selectedApp.email}`}
-                  className="px-4 py-2 rounded-xl bg-luxury-800 hover:bg-luxury-700 border border-slate-700 text-slate-200 font-semibold flex items-center gap-2"
-                >
-                  <Mail className="w-4 h-4" />
-                  <span>Email ({selectedApp.email})</span>
-                </a>
+                {selectedApp.phone ? (
+                  <a
+                    href={`https://wa.me/${String(selectedApp.phone).replace(/[^0-9]/g, '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold flex items-center gap-2 shadow-sm transition-all"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>WhatsApp Student ({selectedApp.phone})</span>
+                  </a>
+                ) : null}
+                {selectedApp.email ? (
+                  <a
+                    href={`mailto:${selectedApp.email}`}
+                    className="px-4 py-2 rounded-xl bg-luxury-800 hover:bg-luxury-700 border border-slate-700 text-slate-200 font-semibold flex items-center gap-2"
+                  >
+                    <Mail className="w-4 h-4" />
+                    <span>Email ({selectedApp.email})</span>
+                  </a>
+                ) : null}
               </div>
 
               {/* Status Update Form */}
@@ -472,7 +549,7 @@ export default function AdminDashboard({ isOpen, onClose, initialApplications = 
                   <div>
                     <label className="text-[11px] text-slate-400 block mb-1">Assigned Consulate:</label>
                     <div className="p-2.5 bg-luxury-900 border border-slate-800 rounded-xl text-slate-300 font-medium">
-                      {selectedApp.consulate}
+                      {selectedApp.consulate || 'Algiers (VFS Global)'}
                     </div>
                   </div>
                 </div>
@@ -502,11 +579,13 @@ export default function AdminDashboard({ isOpen, onClose, initialApplications = 
               <div className="grid grid-cols-2 gap-3 p-4 rounded-2xl bg-luxury-950/60 border border-slate-800">
                 <div>
                   <span className="text-slate-500 block">Target Study Track:</span>
-                  <strong className="text-white">{selectedApp.studyLevel} ({selectedApp.language})</strong>
+                  <strong className="text-white">
+                    {selectedApp.studyLevel || 'N/A'} {selectedApp.language ? `(${selectedApp.language})` : ''}
+                  </strong>
                 </div>
                 <div>
                   <span className="text-slate-500 block">Academic Field:</span>
-                  <strong className="text-white">{selectedApp.field}</strong>
+                  <strong className="text-white">{selectedApp.field || 'N/A'}</strong>
                 </div>
                 <div>
                   <span className="text-slate-500 block">GPA / Mention:</span>
@@ -514,30 +593,32 @@ export default function AdminDashboard({ isOpen, onClose, initialApplications = 
                 </div>
                 <div>
                   <span className="text-slate-500 block">Baccalaureate Year:</span>
-                  <strong className="text-white">{selectedApp.bacYear}</strong>
+                  <strong className="text-white">{selectedApp.bacYear || 'N/A'}</strong>
                 </div>
               </div>
 
               {/* Uploaded Documents */}
               <div>
                 <h4 className="font-bold text-white text-sm mb-2">Attached Student Documents</h4>
-                {selectedApp.documents && selectedApp.documents.length > 0 ? (
+                {Array.isArray(selectedApp.documents) && selectedApp.documents.length > 0 ? (
                   <div className="space-y-2">
-                    {selectedApp.documents.map((doc, idx) => (
+                    {selectedApp.documents.filter(Boolean).map((doc, idx) => (
                       <div
                         key={idx}
                         className="flex items-center justify-between p-3 rounded-xl bg-luxury-950 border border-slate-800 hover:border-slate-700 transition-colors"
                       >
                         <div className="flex items-center gap-2 truncate pr-3">
                           <FileText className="w-4 h-4 text-italia-green shrink-0" />
-                          <span className="text-white font-medium text-xs truncate" title={doc.name}>{doc.name}</span>
+                          <span className="text-white font-medium text-xs truncate" title={doc.name || 'Document'}>
+                            {doc.name || `Document #${idx + 1}`}
+                          </span>
                           <span className="text-slate-500 text-[10px] shrink-0">({doc.size || 'Verified'})</span>
                         </div>
                         <button
                           type="button"
                           onClick={() => handleDocumentAction(doc)}
                           className="px-3 py-1.5 bg-luxury-800 hover:bg-italia-green text-slate-200 hover:text-white rounded-lg border border-slate-700 hover:border-italia-green/50 text-xs font-semibold transition-all flex items-center gap-1.5 shrink-0 shadow-sm group"
-                          title={`View or download ${doc.name}`}
+                          title={`View or download ${doc.name || 'Document'}`}
                         >
                           <Download className="w-3.5 h-3.5 text-italia-green group-hover:text-white transition-colors" />
                           <span>View / Download</span>
@@ -564,7 +645,7 @@ export default function AdminDashboard({ isOpen, onClose, initialApplications = 
           </div>
         </div>
       )}
-
+      </DashboardErrorBoundary>
     </div>
   );
 }

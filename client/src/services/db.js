@@ -9,7 +9,21 @@ const CLOUD_ISSUE_ID = 1;
 
 // Initial bundled applications as ultimate fallback if completely offline
 const BUNDLED_FALLBACK_APPLICATIONS = [
-  { id: 'OWI-2026-8651', fullName: 'Student 8651', status: 'Pending Review', createdAt: '2026-10-02T01:00:00.000Z' },
+  {
+    id: 'OWI-2026-8651',
+    fullName: 'Student 8651',
+    email: 'student8651@onway-italy.com',
+    phone: '+213 555 12 34 56',
+    wilaya: '16 - Alger',
+    studyLevel: 'Master',
+    field: 'Engineering & Technology',
+    language: 'English',
+    consulate: 'Algiers (VFS Global)',
+    universities: ['University of Bologna', 'Politecnico di Milano'],
+    status: 'Approved',
+    statusNote: 'Admissions and Universitaly documentation verified.',
+    createdAt: '2026-10-02T01:00:00.000Z'
+  },
   { id: 'OWI-2026-6434', fullName: 'mohamed', email: 'mohamed@gmail.com', phone: '+213 655635481', wilaya: '16 - Alger', studyLevel: 'Master', field: 'Computer Science & AI', status: 'Pending Review', createdAt: '2026-09-26T15:54:21.390Z' },
   { id: 'OWI-2026-9358', fullName: 'Kimo Hadid', email: 'kimohadid42@gmail.com', phone: '+213 644789874', wilaya: '16 - Alger', studyLevel: 'Master', field: 'Computer Science & AI', status: 'Pending Review', createdAt: '2026-09-26T15:26:27.194Z' },
   { id: 'OWI-2026-5089', fullName: 'Mohamed Ounnas', email: 'mahou8765@gmail.com', phone: '+213 55645381', wilaya: '16 - Alger', studyLevel: 'Master', field: 'Computer Science & AI', status: 'Pending Review', createdAt: '2026-09-26T12:07:42.611Z' },
