@@ -11,18 +11,22 @@ const CLOUD_ISSUE_ID = 1;
 const BUNDLED_FALLBACK_APPLICATIONS = [
   {
     id: 'OWI-2026-8651',
-    fullName: 'Student 8651',
-    email: 'student8651@onway-italy.com',
-    phone: '+213 555 12 34 56',
-    wilaya: '16 - Alger',
-    studyLevel: 'Master',
-    field: 'Engineering & Technology',
+    fullName: 'Aymen Kerdouh',
+    email: 'aymenkerdouh33@gmail.com',
+    phone: '+213 540285345',
+    wilaya: '43 - Mila',
+    studyLevel: 'Bachelor',
+    field: 'Computer Science & Artificial Intelligence',
     language: 'English',
-    consulate: 'Algiers (VFS Global)',
-    universities: ['University of Bologna', 'Politecnico di Milano'],
-    status: 'Approved',
-    statusNote: 'Admissions and Universitaly documentation verified.',
-    createdAt: '2026-10-02T01:00:00.000Z'
+    consulate: 'Italian Consulate General in Annaba',
+    universities: [
+      'University of Pavia',
+      'University of Trieste (Second Call)',
+      'University of Turin'
+    ],
+    status: 'Pending',
+    statusNote: 'Application received. Dossier pending review by admissions counselor.',
+    createdAt: '2026-10-02T01:30:00.000Z'
   },
   { id: 'OWI-2026-6434', fullName: 'mohamed', email: 'mohamed@gmail.com', phone: '+213 655635481', wilaya: '16 - Alger', studyLevel: 'Master', field: 'Computer Science & AI', status: 'Pending Review', createdAt: '2026-09-26T15:54:21.390Z' },
   { id: 'OWI-2026-9358', fullName: 'Kimo Hadid', email: 'kimohadid42@gmail.com', phone: '+213 644789874', wilaya: '16 - Alger', studyLevel: 'Master', field: 'Computer Science & AI', status: 'Pending Review', createdAt: '2026-09-26T15:26:27.194Z' },
@@ -120,8 +124,13 @@ export async function fetchAllApplications() {
     // Add cloud applications
     applications.forEach(a => map.set(a.id, { ...map.get(a.id), ...a }));
 
-    // Add locally saved applications (which might contain full offline base64 file data)
-    localSaved.forEach(a => map.set(a.id, { ...map.get(a.id), ...a }));
+    // Add locally saved applications (clean out any old stale mock name for 8651)
+    localSaved.forEach(a => {
+      if (a.id === 'OWI-2026-8651' && (a.fullName === 'Student 8651' || a.status === 'Approved')) {
+        return;
+      }
+      map.set(a.id, { ...map.get(a.id), ...a });
+    });
 
     applications = Array.from(map.values());
     applications.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
@@ -139,11 +148,18 @@ export async function fetchAllApplications() {
  * Save new student application dossier
  */
 export async function saveApplication(newApplication) {
-  // 1. Save to localStorage immediately (instant offline persistence)
+  // Ensure default status is 'Pending'
+  const appData = {
+    ...newApplication,
+    status: newApplication.status || 'Pending',
+    updatedAt: new Date().toISOString()
+  };
+
+  // 1. Save to localStorage immediately (instant offline persistence, overwrite matching ID)
   try {
-    localStorage.setItem(`owi_app_${newApplication.id}`, JSON.stringify(newApplication));
+    localStorage.setItem(`owi_app_${appData.id}`, JSON.stringify(appData));
     const localList = JSON.parse(localStorage.getItem('owi_local_applications') || '[]');
-    const updatedList = [newApplication, ...localList.filter(a => a.id !== newApplication.id)];
+    const updatedList = [appData, ...localList.filter(a => a.id !== appData.id)];
     localStorage.setItem('owi_local_applications', JSON.stringify(updatedList));
   } catch (storageErr) {
     console.warn('[DB] LocalStorage save notice:', storageErr);
@@ -154,7 +170,7 @@ export async function saveApplication(newApplication) {
     const res = await fetch('/api/applications', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newApplication)
+      body: JSON.stringify(appData)
     });
     if (res.ok) {
       const contentType = res.headers.get('content-type') || '';
@@ -167,7 +183,7 @@ export async function saveApplication(newApplication) {
     console.warn('[DB] /api/applications save notice:', e);
   }
 
-  return newApplication;
+  return appData;
 }
 
 /**

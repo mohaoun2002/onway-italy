@@ -100,9 +100,12 @@ export default function AdminDashboard({ isOpen, onClose, initialApplications = 
       case 'Universitaly Validated':
         return 'bg-sky-500/20 text-sky-400 border-sky-500/40';
       case 'Under Review':
+      case 'Pending':
+      case 'Pending Review':
+      case 'Submitted / Under Review':
         return 'bg-amber-500/20 text-amber-400 border-amber-500/40';
       default:
-        return 'bg-slate-700/50 text-slate-300 border-slate-600';
+        return 'bg-amber-500/20 text-amber-400 border-amber-500/40';
     }
   };
 
@@ -130,7 +133,10 @@ export default function AdminDashboard({ isOpen, onClose, initialApplications = 
         field.includes(q) ||
         unisMatch;
 
-      const matchStatus = statusFilter === 'all' || a.status === statusFilter;
+      const isPendingMatch = (statusFilter === 'Pending' || statusFilter === 'Pending Review') &&
+        (a.status === 'Pending' || a.status === 'Pending Review' || a.status === 'Submitted / Under Review');
+
+      const matchStatus = statusFilter === 'all' || a.status === statusFilter || isPendingMatch;
       return matchSearch && matchStatus;
     });
   }, [applications, searchQuery, statusFilter]);
@@ -140,7 +146,7 @@ export default function AdminDashboard({ isOpen, onClose, initialApplications = 
     const list = Array.isArray(applications) ? applications.filter(a => a && typeof a === 'object') : [];
     return {
       total: list.length,
-      pending: list.filter(a => a?.status === 'Pending Review' || a?.status === 'Under Review').length,
+      pending: list.filter(a => a?.status === 'Pending' || a?.status === 'Pending Review' || a?.status === 'Under Review' || a?.status === 'Submitted / Under Review').length,
       universitaly: list.filter(a => a?.status === 'Universitaly Validated').length,
       visa: list.filter(a => a?.status === 'Visa Stage').length,
       approved: list.filter(a => a?.status === 'Approved').length,
@@ -539,6 +545,7 @@ export default function AdminDashboard({ isOpen, onClose, initialApplications = 
                       onChange={(e) => setEditingStatus(e.target.value)}
                       className="w-full p-2.5 bg-luxury-900 border border-slate-700 rounded-xl text-white font-semibold focus:outline-none focus:border-italia-green"
                     >
+                      <option value="Pending">Pending</option>
                       <option value="Pending Review">Pending Review</option>
                       <option value="Under Review">Under Review</option>
                       <option value="Universitaly Validated">Universitaly Validated</option>

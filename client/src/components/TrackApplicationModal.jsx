@@ -43,9 +43,12 @@ export default function TrackApplicationModal({ isOpen, onClose }) {
       case 'Universitaly Validated':
         return 'bg-sky-500/20 text-sky-400 border-sky-500/40';
       case 'Under Review':
+      case 'Pending':
+      case 'Pending Review':
+      case 'Submitted / Under Review':
         return 'bg-amber-500/20 text-amber-400 border-amber-500/40';
       default:
-        return 'bg-slate-700/50 text-slate-300 border-slate-600';
+        return 'bg-amber-500/20 text-amber-400 border-amber-500/40';
     }
   };
 

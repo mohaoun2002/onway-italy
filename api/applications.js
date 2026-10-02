@@ -125,6 +125,11 @@ module.exports = async function handler(req, res) {
         bodyData.createdAt = new Date().toISOString();
       }
 
+      // Ensure newly submitted applications default to 'Pending' status
+      if (!bodyData.status) {
+        bodyData.status = 'Pending';
+      }
+
       // Keep lightweight in GitHub comments: if dataUrl is excessively large (>500KB), truncate or keep meta
       const sanitizedDocs = (bodyData.documents || []).map(doc => {
         let fileData = doc.fileData || doc.dataUrl || doc.url || '';
@@ -143,23 +148,43 @@ module.exports = async function handler(req, res) {
         };
       });
 
+      // Check if application with this ID already exists in cloud database
+      const existingApps = await getCloudApplications();
+      const existing = existingApps.find(a => a.id && a.id.toUpperCase() === bodyData.id.toUpperCase());
+
       const applicationToStore = {
+        ...(existing || {}),
         ...bodyData,
+        status: bodyData.status || 'Pending',
+        updatedAt: new Date().toISOString(),
         documents: sanitizedDocs
       };
+      const existingCommentId = existing?._commentId;
+      delete applicationToStore._commentId;
 
       const payload = JSON.stringify({
         body: `<!-- APPLICATION_DATA -->\n${JSON.stringify(applicationToStore)}`
       });
 
-      const createRes = await requestGitHub(
-        `/repos/${GITHUB_REPO}/issues/${GITHUB_ISSUE_ID}/comments`,
-        'POST',
-        payload
-      );
+      let saveRes;
+      if (existingCommentId) {
+        // Overwrite / update existing record in cloud database
+        saveRes = await requestGitHub(
+          `/repos/${GITHUB_REPO}/issues/comments/${existingCommentId}`,
+          'PATCH',
+          payload
+        );
+      } else {
+        // Create new comment record
+        saveRes = await requestGitHub(
+          `/repos/${GITHUB_REPO}/issues/${GITHUB_ISSUE_ID}/comments`,
+          'POST',
+          payload
+        );
+      }
 
-      if (createRes.status !== 201) {
-        console.error('Failed to create comment in GitHub:', createRes);
+      if (saveRes.status !== 200 && saveRes.status !== 201) {
+        console.error('Failed to persist comment in GitHub:', saveRes);
         return res.status(500).json({ error: 'Failed to persist application in cloud database' });
       }
 
