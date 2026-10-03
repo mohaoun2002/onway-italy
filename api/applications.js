@@ -133,17 +133,15 @@ module.exports = async function handler(req, res) {
       // Keep lightweight in GitHub comments: if dataUrl is excessively large (>500KB), truncate or keep meta
       const sanitizedDocs = (bodyData.documents || []).map(doc => {
         let fileData = doc.fileData || doc.dataUrl || doc.url || '';
-        // If fileData is over 500KB, store clean URL or metadata indicator to stay within GitHub comment 65KB limit
-        if (fileData && fileData.length > 500000) {
-          fileData = `[Archived file: ${doc.name} - ${doc.size}]`;
+        // If fileData is over 500 characters, store clean metadata indicator to guarantee staying well within GitHub comment 65KB limit
+        if (fileData && fileData.length > 500) {
+          fileData = `[Archived file: ${doc.name || 'Document'} - ${doc.size || 'Verified'}]`;
         }
         return {
-          name: doc.name,
-          size: doc.size,
+          name: doc.name || 'Document',
+          size: doc.size || 'Verified',
           type: doc.type || 'application/pdf',
           fileData: fileData,
-          dataUrl: fileData,
-          url: fileData,
           uploadedAt: doc.uploadedAt || new Date().toISOString()
         };
       });

@@ -1,5 +1,29 @@
 [
   {
+    "id": "OWI-2026-5287",
+    "createdAt": "2026-10-03T11:00:00.000Z",
+    "fullName": "Amine Redha Yagoubi",
+    "email": "yagoubi.amine.redha@gmail.com",
+    "phone": "+213 654750744",
+    "wilaya": "20 - Saïda",
+    "studyLevel": "Master",
+    "field": "Business Administration & Management",
+    "language": "English",
+    "gpa": "12.28/20",
+    "bacYear": "2023",
+    "currentDegree": "Bachelor in Business Administration (Baccalaureate: 2023)",
+    "universities": [
+      "University of Palermo",
+      "University of Tuscia",
+      "University of Udine"
+    ],
+    "status": "Pending",
+    "statusNote": "Application received. Dossier pending review by admissions counselor.",
+    "consulate": "Italian Embassy in Algiers (VFS Global)",
+    "dsuEligibility": "Calculated upon translation of family income records",
+    "documents": []
+  },
+  {
     "id": "OWI-2026-8651",
     "createdAt": "2026-10-02T01:30:00.000Z",
     "fullName": "Aymen Kerdouh",

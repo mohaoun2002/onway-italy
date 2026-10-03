@@ -10,6 +10,28 @@ const CLOUD_ISSUE_ID = 1;
 // Initial bundled applications as ultimate fallback if completely offline
 const BUNDLED_FALLBACK_APPLICATIONS = [
   {
+    id: 'OWI-2026-5287',
+    fullName: 'Amine Redha Yagoubi',
+    email: 'yagoubi.amine.redha@gmail.com',
+    phone: '+213 654750744',
+    wilaya: '20 - Saïda',
+    studyLevel: 'Master',
+    field: 'Business Administration & Management',
+    language: 'English',
+    currentDegree: 'Bachelor in Business Administration (Baccalaureate: 2023)',
+    bacYear: '2023',
+    gpa: '12.28/20',
+    universities: [
+      'University of Palermo',
+      'University of Tuscia',
+      'University of Udine'
+    ],
+    consulate: 'Italian Embassy in Algiers (VFS Global)',
+    status: 'Pending',
+    statusNote: 'Application received. Dossier pending review by admissions counselor.',
+    createdAt: '2026-10-03T11:00:00.000Z'
+  },
+  {
     id: 'OWI-2026-8651',
     fullName: 'Aymen Kerdouh',
     email: 'aymenkerdouh33@gmail.com',
@@ -165,12 +187,32 @@ export async function saveApplication(newApplication) {
     console.warn('[DB] LocalStorage save notice:', storageErr);
   }
 
-  // 2. Attempt save via /api/applications
+  // 2. Prepare lightweight cloud payload (strip out large base64 data so payload never exceeds network/GitHub comment size limits)
+  const cloudDocs = (appData.documents || []).map(doc => {
+    let fileData = doc.fileData || doc.dataUrl || doc.url || '';
+    if (fileData.length > 500) {
+      fileData = '';
+    }
+    return {
+      name: doc.name || 'Document',
+      size: doc.size || 'Verified',
+      type: doc.type || 'application/pdf',
+      fileData: fileData,
+      uploadedAt: doc.uploadedAt || new Date().toISOString()
+    };
+  });
+
+  const cloudPayload = {
+    ...appData,
+    documents: cloudDocs
+  };
+
+  // 3. Attempt save via /api/applications
   try {
     const res = await fetch('/api/applications', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(appData)
+      body: JSON.stringify(cloudPayload)
     });
     if (res.ok) {
       const contentType = res.headers.get('content-type') || '';
@@ -178,6 +220,8 @@ export async function saveApplication(newApplication) {
         const json = await res.json();
         if (json && json.application) return json.application;
       }
+    } else {
+      console.warn('[DB] /api/applications returned non-ok status:', res.status);
     }
   } catch (e) {
     console.warn('[DB] /api/applications save notice:', e);
